@@ -34,4 +34,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: yarn eslint .
+
+      - name: Run eslint
+      - run: yarn lint
