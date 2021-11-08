@@ -1,0 +1,37 @@
+//media queries
+@mixin tablet-desktop {
+  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+@mixin tablet {
+  @media (min-width: #{$tablet-width}) {
+    @content;
+  }
+}
+@mixin desktop {
+  @media (min-width: #{$desktop-width}) {
+    @content;
+  }
+}
+//multi purposed flex mixin
+@mixin flex($direction: row, $justify: start, $align: flex-start) {
+  display: flex;
+  flex-wrap: wrap;
+  @if $direction != row {
+    flex-direction: $direction;
+  }
+  @if $justify != start {
+    justify-content: $justify;
+  }
+  @if $align != flex-start {
+    align-items: $align;
+  }
+}
+//default padding mixin
+@mixin padding($size: 1rem) {
+  padding: 0.25rem $size;
+}
+@mixin text-center {
+  text-align: center;
+}
