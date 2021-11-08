@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import LogoIcon from '../atoms/logoIcon'
 import UserNameDiv from '../atoms/userNameDiv'
 
-export default function CurrUserData() {
+export default function CurrUserData(): ReactElement {
     return (
         <div className="header__user">
             <LogoIcon />
