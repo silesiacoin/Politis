@@ -1,6 +1,9 @@
-import { ReactElement } from 'react'
-import sscLogo from '../../assets/images/ssc.png'
+import React, { ReactElement } from 'react';
 
-const LogoIcon = (): ReactElement => <img src={sscLogo} alt="icon of silesia coin" />
+const sscLogo = require('../../assets/images/ssc.png');
+
+const LogoIcon = (): ReactElement => (
+  <img src={sscLogo} alt='icon of silesia coin' />
+);
 
 export default LogoIcon;
