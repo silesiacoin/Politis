@@ -9,7 +9,6 @@ type Props = {
 export default function CurrUserData({ publicAddress }: Props): ReactElement {
   return (
     <div className='header__user'>
-      <LogoIcon />
       {!publicAddress ? (
         <UserNameDiv classes='user__name'>
           You must connect to your wallet

@@ -12,6 +12,7 @@ const { ethereum } = window;
 
 export default function App(): ReactElement {
   const [isMetamaskInstalled, setIsMetamaskInstalled] = useState(false);
+  const [isCorrectNetwork, setIsCorrectNetwork] = useState<boolean>(true);
   const [publicAddress, setPublicAddress] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,6 +31,8 @@ export default function App(): ReactElement {
     <React.Fragment>
       <Header
         isMetamaskInstalled={isMetamaskInstalled}
+        isCorrectNetwork={isCorrectNetwork}
+        setIsCorrectNetwork={setIsCorrectNetwork}
         publicAddress={publicAddress}
         setPublicAddress={setPublicAddress}
       />

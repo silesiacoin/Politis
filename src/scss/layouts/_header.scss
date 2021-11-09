@@ -1,5 +1,3 @@
 .header {
-  &__user {
-    @include flex;
-  }
+  @include flex($justify: space-between, $align: center);
 }

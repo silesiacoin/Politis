@@ -1,24 +1,39 @@
 import React, { ReactElement, Dispatch, SetStateAction } from 'react';
-import getAccount from '../../helpers/getAccount';
+import connectMetamask from '../../functions/connectMetamask';
 import Button from '../atoms/button';
+import ChangeNetworkDiv from '../atoms/changeNetworkDiv';
 
 type Props = {
+  isCorrectNetwork: boolean | null;
+  setIsCorrectNetwork: Dispatch<SetStateAction<boolean>>;
   publicAddress: string | null;
   setPublicAddress: Dispatch<SetStateAction<string | null>>;
 };
 
-const Navbar = ({ publicAddress, setPublicAddress }: Props): ReactElement => {
+export default function Navbar({
+  isCorrectNetwork,
+  setIsCorrectNetwork,
+  publicAddress,
+  setPublicAddress,
+}: Props): ReactElement {
+  const handleConnect = async () => {
+    const { isCorrectNetwork, account } = await connectMetamask();
+    if (!isCorrectNetwork) return setIsCorrectNetwork(false);
+    setIsCorrectNetwork(true);
+    setPublicAddress(account);
+  };
+  const handleDisconnect = () => setPublicAddress(null);
+
   return (
     <nav>
       {publicAddress ? (
-        <Button onClick={() => console.log(getAccount())}>
+        <Button onClick={(): void => handleDisconnect()}>
           Disconnect wallet
         </Button>
       ) : (
-        <Button onClick={() => 0}>Connect wallet</Button>
+        <Button onClick={(): any => handleConnect()}>Connect wallet</Button>
       )}
+      {!isCorrectNetwork && <ChangeNetworkDiv />}
     </nav>
   );
-};
-
-export default Navbar;
+}
