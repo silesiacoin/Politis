@@ -16,7 +16,9 @@ export default function CurrUserData(): ReactElement {
           </UserNameDiv>
         )
       ) : (
-        <UserNameDiv classes='user__name'>Install metamask</UserNameDiv>
+        <UserNameDiv classes='user__name'>
+          Install metamask extension
+        </UserNameDiv>
       )}
     </div>
   );
