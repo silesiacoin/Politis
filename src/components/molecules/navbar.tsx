@@ -1,21 +1,17 @@
-import React, { ReactElement, Dispatch, SetStateAction } from 'react';
+import React, { useContext, ReactElement } from 'react';
+import { Context } from '../../App';
 import connectMetamask from '../../functions/connectMetamask';
 import Button from '../atoms/button';
 import ChangeNetworkDiv from '../atoms/changeNetworkDiv';
 
-type Props = {
-  isCorrectNetwork: boolean | null;
-  setIsCorrectNetwork: Dispatch<SetStateAction<boolean>>;
-  publicAddress: string | null;
-  setPublicAddress: Dispatch<SetStateAction<string | null>>;
-};
+export default function Navbar(): ReactElement {
+  const {
+    isCorrectNetwork,
+    setIsCorrectNetwork,
+    publicAddress,
+    setPublicAddress,
+  } = useContext(Context);
 
-export default function Navbar({
-  isCorrectNetwork,
-  setIsCorrectNetwork,
-  publicAddress,
-  setPublicAddress,
-}: Props): ReactElement {
   const handleConnect = async () => {
     const { isCorrectNetwork, account } = await connectMetamask();
     if (!isCorrectNetwork) return setIsCorrectNetwork(false);

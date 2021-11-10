@@ -1,20 +1,22 @@
-import React, { ReactElement } from 'react';
-import LogoIcon from '../atoms/logoIcon';
+import React, { useContext, ReactElement } from 'react';
+import { Context } from '../../App';
 import UserNameDiv from '../atoms/userNameDiv';
 
-type Props = {
-  publicAddress: string | null;
-};
+export default function CurrUserData(): ReactElement {
+  const { isMetamaskInstalled, publicAddress } = useContext(Context);
 
-export default function CurrUserData({ publicAddress }: Props): ReactElement {
   return (
     <div className='header__user'>
-      {!publicAddress ? (
-        <UserNameDiv classes='user__name'>
-          You must connect to your wallet
-        </UserNameDiv>
+      {isMetamaskInstalled ? (
+        publicAddress ? (
+          <UserNameDiv classes='user__name'>{publicAddress}</UserNameDiv>
+        ) : (
+          <UserNameDiv classes='user__name'>
+            You must connect to your wallet
+          </UserNameDiv>
+        )
       ) : (
-        <UserNameDiv classes='user__name'>{publicAddress}</UserNameDiv>
+        <UserNameDiv classes='user__name'>Install metamask</UserNameDiv>
       )}
     </div>
   );
