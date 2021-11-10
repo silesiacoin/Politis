@@ -3,13 +3,20 @@ import React, { ReactElement } from 'react';
 interface Props {
   onClick: () => void;
   classes?: string;
+  disabled?: boolean;
   children: string;
 }
 
-const Button = ({ onClick, classes, children }: Props): ReactElement => (
+const Button = ({
+  onClick,
+  classes,
+  disabled,
+  children,
+}: Props): ReactElement => (
   <button
     className={classes ? `button ${classes}` : 'button'}
-    onClick={onClick}>
+    onClick={onClick}
+    disabled={disabled}>
     {children}
   </button>
 );

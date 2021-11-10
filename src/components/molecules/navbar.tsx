@@ -31,7 +31,11 @@ export default function Navbar({
           Disconnect wallet
         </Button>
       ) : (
-        <Button onClick={(): any => handleConnect()}>Connect wallet</Button>
+        <Button
+          onClick={(): any => handleConnect()}
+          disabled={!isCorrectNetwork ? true : false}>
+          Connect wallet
+        </Button>
       )}
       {!isCorrectNetwork && <ChangeNetworkDiv />}
     </nav>

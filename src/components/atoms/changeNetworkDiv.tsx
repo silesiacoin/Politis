@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
-const ChangeNetworkDiv = () => {
+const ChangeNetworkDiv = (): ReactElement => {
   return (
     <div>
       You need to change your current network to{' '}
-      <a href='https://docs.lukso.tech/networks/l14-testnet/'>lukso testnet</a>
+      <a href='https://docs.lukso.tech/networks/l14-testnet/'>lukso testnet</a>{' '}
+      and refresh the page
     </div>
   );
 };
