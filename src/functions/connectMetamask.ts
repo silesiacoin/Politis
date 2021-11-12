@@ -1,3 +1,5 @@
+import { CHAIN_ID } from '../constants/chain';
+
 interface MetamaskResponse {
   isCorrectNetwork: boolean;
   account: string | null;
@@ -6,7 +8,7 @@ interface MetamaskResponse {
 export default async function connectMetamask(): Promise<MetamaskResponse> {
   const ethereum = window.ethereum;
 
-  if (ethereum.networkVersion !== '22')
+  if (ethereum.networkVersion != CHAIN_ID)
     return {
       isCorrectNetwork: false,
       account: null,
