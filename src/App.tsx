@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import './scss/main.scss';
 import Header from './components/organisms/header';
+import UpForm from './components/organisms/upForm';
 
 declare global {
   interface Window {
@@ -57,6 +58,7 @@ export default function App(): ReactElement {
         setPublicAddress,
       }}>
       <Header />
+      <UpForm />
     </Context.Provider>
   );
 }

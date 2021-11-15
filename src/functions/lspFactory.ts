@@ -1,7 +1,7 @@
 import { LSPFactory, ProfileDataBeforeUpload } from '@lukso/lsp-factory.js';
-import { RPC_URL, CHAIN_ID } from '../constants/chain';
+import { RPC_URL, CHAIN_ID, GAMEMASTER_ADDRESS } from '../constants/chain';
 
-const deployKey = '0x...'; // Private key of the account which will deploy UPs
+const deployKey = GAMEMASTER_ADDRESS;
 const provider = RPC_URL;
 const chainId = CHAIN_ID;
 
@@ -10,7 +10,7 @@ const lspFactory = new LSPFactory(provider, {
   chainId,
 });
 
-export default async function deployUP(
+export async function deployUP(
   publicAddress: string,
   profileData: ProfileDataBeforeUpload
 ): Promise<string> {
