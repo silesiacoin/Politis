@@ -35,6 +35,7 @@ export default async function fetchUPData(
   const erc725 = new ERC725(schema, address, provider, config);
   try {
     const fetchResponse = await erc725.fetchData('LSP3Profile');
+    // const profileJSON = fetchResponse['LSP3Profile'] as LSP3ProfileJSON;
     const profileJSON = <LSP3ProfileJSON>(<any>fetchResponse['LSP3Profile']);
     return profileJSON.LSP3Profile;
   } catch (error) {
