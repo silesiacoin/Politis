@@ -8,9 +8,12 @@ import Submit from '../atoms/submit';
 const UpLoginForm = (): ReactElement => {
   const [upAddress, setUpAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(true);
+
   const { setUniversalProfile } = useContext(Context);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const fetchUPResponse = await fetchUPData(upAddress);
     if (fetchUPResponse instanceof Error) {
       setIsValidAddress(false);
@@ -19,6 +22,7 @@ const UpLoginForm = (): ReactElement => {
       setUniversalProfile(fetchUPResponse);
     }
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <Label>
@@ -31,8 +35,14 @@ const UpLoginForm = (): ReactElement => {
           required
         />
       </Label>
+
       {!isValidAddress && <p>Provided invalid address</p>}
-      <Submit value='Log into your Universal Profile' />
+
+      {upAddress ? (
+        <Submit value='Log into your Universal Profile' />
+      ) : (
+        <Submit value='Log into your Universal Profile' disabled />
+      )}
     </form>
   );
 };

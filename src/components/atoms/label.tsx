@@ -4,8 +4,6 @@ interface Props {
   children: ReactNode;
 }
 
-const Label = ({ children }: Props): ReactElement => {
-  return <label>{children}</label>;
-};
+const Label = ({ children }: Props): ReactElement => <label>{children}</label>;
 
 export default Label;
