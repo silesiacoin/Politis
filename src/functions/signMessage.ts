@@ -1,13 +1,12 @@
-import { ethers } from 'ethers';
-
-interface SignedMessage {
-  message: string;
+import { ethers, Signer } from 'ethers';
+interface SignMessageResponse {
+  signer: Signer;
   signature: string;
 }
 
 export async function signMessage(
   message: string
-): Promise<SignedMessage | null> {
+): Promise<SignMessageResponse | null> {
   try {
     const { ethereum } = window;
     if (!ethereum) {
@@ -15,13 +14,13 @@ export async function signMessage(
       return null;
     }
 
-    await ethereum.send('eth_requestAccounts');
+    await ethereum.request({ method: 'eth_requestAccounts' });
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const signature = await signer.signMessage(message);
 
     return {
-      message,
+      signer,
       signature,
     };
   } catch {

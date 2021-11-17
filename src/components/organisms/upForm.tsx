@@ -1,4 +1,10 @@
-import React, { useState, ReactElement, FormEvent, useRef } from 'react';
+import React, {
+  useState,
+  ReactElement,
+  FormEvent,
+  useRef,
+  useContext,
+} from 'react';
 import { LSP3ProfileImage, LSP3ProfileLink } from '@lukso/lsp-factory.js';
 import { deployUP } from '../../functions/lspFactory';
 import InputString from '../atoms/inputString';
@@ -7,8 +13,10 @@ import Submit from '../atoms/submit';
 import Button from '../atoms/button';
 import LinkList from '../molecules/linkList';
 import { signMessage } from '../../functions/signMessage';
+import { Context } from '../../App';
 
 export default function UpForm(): ReactElement {
+  const { publicAddress } = useContext(Context);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [profileImage, setProfileImage] = useState<
@@ -58,9 +66,11 @@ export default function UpForm(): ReactElement {
       'Create a universal profile using your metamask wallet.'
     );
     if (signedMessage) {
-      const { message, signature } = signedMessage;
-      console.log(message, signature);
-      if (signature) deployUP(signature, profileData);
+      const { signer, signature } = signedMessage;
+      if (publicAddress && signature) {
+        const upAddress = deployUP(publicAddress, signer, profileData);
+        console.log(upAddress);
+      }
     } else {
       console.error('Error: Signature not received');
     }

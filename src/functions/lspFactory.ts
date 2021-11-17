@@ -1,19 +1,17 @@
 import { LSPFactory, ProfileDataBeforeUpload } from '@lukso/lsp-factory.js';
-import { RPC_URL, CHAIN_ID } from '../constants/chain';
+import { Signer } from 'ethers';
+import { RPC_URL } from '../constants/chain';
 
 const provider = RPC_URL;
-const chainId = CHAIN_ID;
 
 export async function deployUP(
-  signature: string,
+  publicAddress: string,
+  signer: Signer,
   profileData: ProfileDataBeforeUpload
 ): Promise<string> {
-  const lspFactory = new LSPFactory(provider, {
-    deployKey: signature,
-    chainId,
-  });
+  const lspFactory = new LSPFactory(provider, signer);
   const contract = await lspFactory.LSP3UniversalProfile.deploy({
-    controllingAccounts: [signature],
+    controllingAccounts: [publicAddress],
     lsp3Profile: profileData,
   });
   const contractAddress = contract.ERC725Account.address;
