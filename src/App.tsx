@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import './scss/main.scss';
 import Header from './components/organisms/header';
+import World from './components/organisms/world';
 
 declare global {
   interface Window {
@@ -56,7 +57,8 @@ export default function App(): ReactElement {
         publicAddress,
         setPublicAddress,
       }}>
-      <Header />
+      {/* <Header /> */}
+      <World />
     </Context.Provider>
   );
 }
