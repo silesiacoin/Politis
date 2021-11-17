@@ -1,22 +1,14 @@
-import React, {
-  useState,
-  ReactElement,
-  FormEvent,
-  useRef,
-  useContext,
-} from 'react';
+import React, { useState, ReactElement, FormEvent, useRef } from 'react';
 import { LSP3ProfileImage, LSP3ProfileLink } from '@lukso/lsp-factory.js';
-import { Context } from '../../App';
 import { deployUP } from '../../functions/lspFactory';
 import InputString from '../atoms/inputString';
 import Label from '../atoms/label';
 import Submit from '../atoms/submit';
 import Button from '../atoms/button';
 import LinkList from '../molecules/linkList';
+import { signMessage } from '../../functions/signMessage';
 
 export default function UpForm(): ReactElement {
-  const { publicAddress } = useContext(Context);
-
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [profileImage, setProfileImage] = useState<
@@ -38,8 +30,9 @@ export default function UpForm(): ReactElement {
     setLinkTitle('');
     setLinkUrl('');
   };
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (
       profileImageRef.current !== null &&
       profileImageRef.current.files !== null
@@ -61,7 +54,16 @@ export default function UpForm(): ReactElement {
       links: [{ title: 'My Website', url: 'www.my-website.com' }],
     };
 
-    if (publicAddress) deployUP(publicAddress, profileData);
+    const signedMessage = await signMessage(
+      'Create a universal profile using your metamask wallet.'
+    );
+    if (signedMessage) {
+      const { message, signature } = signedMessage;
+      console.log(message, signature);
+      if (signature) deployUP(signature, profileData);
+    } else {
+      console.error('Error: Signature not received');
+    }
   };
 
   return (

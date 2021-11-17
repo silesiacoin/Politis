@@ -6,7 +6,7 @@ interface MetamaskResponse {
 }
 
 export default async function connectMetamask(): Promise<MetamaskResponse> {
-  const ethereum = window.ethereum;
+  const { ethereum } = window;
 
   if (ethereum.networkVersion != CHAIN_ID)
     return {
