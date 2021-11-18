@@ -1,5 +1,5 @@
 import React, { useContext, ReactElement } from 'react';
-import { Context } from '../../App';
+import { Context } from '../../Context';
 import connectMetamask from '../../functions/connectMetamask';
 import Button from '../atoms/button';
 import ChangeNetworkDiv from '../atoms/changeNetworkDiv';

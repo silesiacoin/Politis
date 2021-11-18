@@ -13,10 +13,13 @@ import Submit from '../atoms/submit';
 import Button from '../atoms/button';
 import LinkList from '../molecules/linkList';
 import { getSigner } from '../../functions/getSigner';
-import { Context } from '../../App';
+import { Context } from '../../Context';
+import { DEPLOYING } from '../../constants/status';
 
-export default function UpForm(): ReactElement {
-  const { publicAddress } = useContext(Context);
+export default function UpRegistrationForm(): ReactElement {
+  const { publicAddress, setUniversalProfileAddress } = useContext(Context);
+
+  // form inputs
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [profileImage, setProfileImage] = useState<
@@ -64,10 +67,17 @@ export default function UpForm(): ReactElement {
 
     const signer = await getSigner();
     if (publicAddress && signer) {
-      const upAddress = deployUP(publicAddress, signer, profileData);
-      console.log(upAddress);
+      setUniversalProfileAddress(DEPLOYING);
+
+      const universalProfile = await deployUP(
+        publicAddress,
+        signer,
+        profileData
+      );
+
+      setUniversalProfileAddress(universalProfile);
     } else {
-      console.error('Error: Signature not received');
+      console.error('Error: Metamask not connected');
     }
   };
 
