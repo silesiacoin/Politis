@@ -152,6 +152,7 @@ export default function World(): ReactElement {
         <div>id: {selected?.id}</div>
         <div>owner: {selected?.owner}</div>
         <div>price: {selected?.price}</div>
+        <div>polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)} {selected?.polygon[1][0].toFixed(2)}</div>
       </div>
     </div>
   );
