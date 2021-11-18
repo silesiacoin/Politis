@@ -34,11 +34,11 @@ interface Tile {
 
 const highlightStyle = new Style({
   fill: new Fill({
-    color: 'rgba(255,255,255,0.7)',
+    color: 'rgba(255,255,255,0.7)'
   }),
   stroke: new Stroke({
     color: '#3399CC',
-    width: 3,
+    width: 3
   })
 });
 
@@ -46,7 +46,7 @@ export default function World(): ReactElement {
   const [startCreateMap, setStart] = useState<boolean>(false);
   const [selected, setSelected] = useState<null | Tile>(null);
   const [mainMap, setMainMap] = useState<Map | null>(null);
-  console.log(mainMap);
+  const [xy, setXY] = useState<{ x: number, y: number } | null>(null);
 
   function zoomMap(map: Map) {
     map.getView().setCenter(proj.transform(berlinMapCor, 'EPSG:4326', 'EPSG:3857'));
@@ -74,7 +74,7 @@ export default function World(): ReactElement {
         const info: Tile = {
           id: arrayLength,
           owner: 'dummy',
-          price: j * i,
+          price: 0,
           polygon: poly
         };
 
@@ -137,8 +137,18 @@ export default function World(): ReactElement {
           setSelected(tile);
           f.setStyle(highlightStyle);
 
+          document.onmousemove = function (e) {
+            const x = e.clientX;
+            const y = e.clientY;
+            setXY({
+              x: x,
+              y: y
+            });
+          }
+
           return true;
         });
+
         return true;
       });
 
@@ -148,12 +158,17 @@ export default function World(): ReactElement {
 
   return (
     <div id={'map'} className={'map'}>
-      <div className={'select-tile-panel'}>
-        <div>id: {selected?.id}</div>
-        <div>owner: {selected?.owner}</div>
-        <div>price: {selected?.price}</div>
-        <div>polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)} {selected?.polygon[1][0].toFixed(2)}</div>
-      </div>
+      {xy !== null &&
+        <div className={'select-tile-panel'} style={{
+          top: xy?.y,
+          left: xy?.x
+        }}>
+          <div>id: {selected?.id}</div>
+          <div>owner: {selected?.owner}</div>
+          <div>price: {selected?.price}</div>
+          <div>polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)} {selected?.polygon[1][0].toFixed(2)}</div>
+        </div>
+      }
     </div>
   );
 }

@@ -3,8 +3,10 @@
 }
 
 .select-tile-panel {
+    position: absolute;
     background-color: $white;
     z-index: 1;
     overflow: hidden;
     padding: 8px;
+    box-shadow: 1px 1px 1px 1px;
 }
