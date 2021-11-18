@@ -1,12 +1,6 @@
 import { ethers, Signer } from 'ethers';
-interface SignMessageResponse {
-  signer: Signer;
-  signature: string;
-}
 
-export async function signMessage(
-  message: string
-): Promise<SignMessageResponse | null> {
+export async function getSigner(): Promise<Signer | null> {
   try {
     const { ethereum } = window;
     if (!ethereum) {
@@ -17,12 +11,8 @@ export async function signMessage(
     await ethereum.request({ method: 'eth_requestAccounts' });
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const signature = await signer.signMessage(message);
 
-    return {
-      signer,
-      signature,
-    };
+    return signer;
   } catch {
     console.error(new Error('Error signing the message'));
     return null;

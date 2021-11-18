@@ -12,7 +12,7 @@ import Label from '../atoms/label';
 import Submit from '../atoms/submit';
 import Button from '../atoms/button';
 import LinkList from '../molecules/linkList';
-import { signMessage } from '../../functions/signMessage';
+import { getSigner } from '../../functions/getSigner';
 import { Context } from '../../App';
 
 export default function UpForm(): ReactElement {
@@ -62,15 +62,10 @@ export default function UpForm(): ReactElement {
       links: [{ title: 'My Website', url: 'www.my-website.com' }],
     };
 
-    const signedMessage = await signMessage(
-      'Create a universal profile using your metamask wallet.'
-    );
-    if (signedMessage) {
-      const { signer, signature } = signedMessage;
-      if (publicAddress && signature) {
-        const upAddress = deployUP(publicAddress, signer, profileData);
-        console.log(upAddress);
-      }
+    const signer = await getSigner();
+    if (publicAddress && signer) {
+      const upAddress = deployUP(publicAddress, signer, profileData);
+      console.log(upAddress);
     } else {
       console.error('Error: Signature not received');
     }
