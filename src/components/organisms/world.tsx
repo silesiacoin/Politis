@@ -9,86 +9,150 @@ import * as turf from '@turf/turf';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
-import Feature from 'ol/Feature';
-import Geometry from 'ol/geom/Geometry';
-import RenderFeature from 'ol/render/Feature';
+import * as proj from 'ol/proj';
+import { FeatureCollection, Polygon } from '@turf/turf';
+
+const berlinMapCor = [13.44, 52.51];
+const mapZoom = 11;
+const sideBoxA = 0.05;
+const sideBoxB = 0.05;
+const numberTilesInCol = 6;
+const numberCols = 15;
+const firstPointsOnMap = [
+  [13, 52.70],
+  [13, 52.75],
+  [13.05, 52.75],
+  [13.05, 52.70]
+];
+
+interface Tile {
+  id: number,
+  owner: string,
+  price: number,
+  polygon: number[][]
+}
+
+const highlightStyle = new Style({
+  fill: new Fill({
+    color: 'rgba(255,255,255,0.7)',
+  }),
+  stroke: new Stroke({
+    color: '#3399CC',
+    width: 3,
+  })
+});
 
 export default function World(): ReactElement {
-  const [start, setStart] = useState<boolean>(false);
-  const [selected, setSelected] = useState<null | number>(null);
+  const [startCreateMap, setStart] = useState<boolean>(false);
+  const [selected, setSelected] = useState<null | Tile>(null);
+  const [mainMap, setMainMap] = useState<Map | null>(null);
+  console.log(mainMap);
 
-  const features = turf.featureCollection([
-    turf.polygon([[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]], { id: 0 }),
-    turf.polygon([[[0, -1], [0, 0], [1, 0], [1, -1], [0, -1]]], { id: 1 }),
-    turf.polygon([[[1, -1], [1, 0], [2, 0], [2, -1], [1, -1]]], { id: 2 }),
-  ]);
+  function zoomMap(map: Map) {
+    map.getView().setCenter(proj.transform(berlinMapCor, 'EPSG:4326', 'EPSG:3857'));
+    map.getView().setZoom(mapZoom);
+  }
 
-  useEffect(() => {
-    if (!start) {
-      const vectorSource = new Vector({
+  function createTiles() {
+    let sideA = sideBoxA;
+    let sideB = sideBoxB;
+    let arrayLength = 0;
+
+    const allTiles = [];
+    for (let i = 0; i < numberCols; i++) {
+      for (let j = 0; j < numberTilesInCol; j++) {
+        sideA = sideA + sideBoxA;
+
+        const poly = [
+          [firstPointsOnMap[0][0] + sideB, firstPointsOnMap[0][1] - sideA],
+          [firstPointsOnMap[1][0] + sideB, firstPointsOnMap[1][1] - sideA],
+          [firstPointsOnMap[2][0] + sideB, firstPointsOnMap[2][1] - sideA],
+          [firstPointsOnMap[3][0] + sideB, firstPointsOnMap[3][1] - sideA],
+          [firstPointsOnMap[0][0] + sideB, firstPointsOnMap[0][1] - sideA]
+        ];
+
+        const info: Tile = {
+          id: arrayLength,
+          owner: 'dummy',
+          price: j * i,
+          polygon: poly
+        };
+
+        allTiles[arrayLength] = turf.polygon([poly], info);
+        arrayLength++;
+      }
+      sideA = sideBoxA;
+      sideB = sideB + sideBoxB;
+    }
+
+    return allTiles;
+  }
+
+  function createMap(features: FeatureCollection<Polygon, Tile>) {
+    const vectorLayer = new VectorLayer({
+      source: new Vector({
         features: (new GeoJSON()).readFeatures(features, {
           featureProjection: 'EPSG:3857'
         })
-      });
+      })
+    });
 
-      const vectorLayer = new VectorLayer({
-        source: vectorSource
-      });
-
-      const highlightStyle = new Style({
-        fill: new Fill({
-          color: 'rgba(255,255,255,0.7)',
+    const map = new Map({
+      layers: [
+        new TileLayer({
+          source: new OSM()
         }),
-        stroke: new Stroke({
-          color: '#3399CC',
-          width: 3,
-        }),
-      });
+        vectorLayer
+      ],
+      target: 'map',
+      view: new View()
+    });
 
-      const map = new Map({
-        layers: [
-          new TileLayer({
-            source: new OSM()
-          }),
-          vectorLayer
-        ],
-        target: 'map',
-        view: new View({
-          center: [0, 0],
-          zoom: 8
-        })
-      });
+    return map;
+  }
 
-      let selectedTiles: RenderFeature | Feature<Geometry> | null = null;
+  useEffect(() => {
+    if (!startCreateMap) {
+      const allTiles = createTiles();
+      const features = turf.featureCollection(allTiles);
+      const map = createMap(features);
+      setMainMap(map);
+      zoomMap(map);
+      let selectedTiles: { setStyle: (arg0: undefined) => void; } | null = null;
 
       map.on('pointermove', function (e) {
         if (selectedTiles !== null) {
-          //@ts-ignore
           selectedTiles.setStyle(undefined);
           selectedTiles = null;
         }
 
-        map.forEachFeatureAtPixel(e.pixel, function (f) {
+        map.forEachFeatureAtPixel(e.pixel, function (f: any) {
           selectedTiles = f;
-          console.log('selected id: ' + selectedTiles.get('id'));
-          setSelected(selectedTiles.get('id'));
-          //@ts-ignore
+          const tile: Tile = {
+            id: f.get('id'),
+            owner: f.get('owner'),
+            price: f.get('price'),
+            polygon: f.get('polygon'),
+          };
+          setSelected(tile);
           f.setStyle(highlightStyle);
 
           return true;
         });
+        return true;
       });
 
-      setStart(true);
+      return setStart(true);
     }
-
-    return () => {
-      //
-    }
-  }, [features, selected, start])
+  }, [startCreateMap]);
 
   return (
-    <div id={'map'} style={{ height: '100vh', width: '100vw' }}>
+    <div id={'map'} className={'map'}>
+      <div className={'select-tile-panel'}>
+        <div>id: {selected?.id}</div>
+        <div>owner: {selected?.owner}</div>
+        <div>price: {selected?.price}</div>
+      </div>
     </div>
   );
 }

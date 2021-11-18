@@ -57,7 +57,7 @@ export default function App(): ReactElement {
         publicAddress,
         setPublicAddress,
       }}>
-      {/* <Header /> */}
+      <Header />
       <World />
     </Context.Provider>
   );

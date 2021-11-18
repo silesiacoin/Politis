@@ -1,0 +1,10 @@
+.map {
+    height: 100vh;
+}
+
+.select-tile-panel {
+    background-color: $white;
+    z-index: 1;
+    overflow: hidden;
+    padding: 8px;
+}
