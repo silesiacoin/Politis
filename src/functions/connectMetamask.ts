@@ -8,13 +8,13 @@ interface MetamaskResponse {
 export default async function connectMetamask(): Promise<MetamaskResponse> {
   const { ethereum } = window;
 
-  if (ethereum.networkVersion != CHAIN_ID)
+  if (ethereum?.networkVersion != CHAIN_ID)
     return {
       isCorrectNetwork: false,
       account: null,
     };
 
-  const accounts = await ethereum.request({
+  const accounts = await ethereum?.request({
     method: 'eth_requestAccounts',
   });
 

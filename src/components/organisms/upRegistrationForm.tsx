@@ -18,21 +18,14 @@ import { DEPLOYING } from '../../constants/status';
 
 export default function UpRegistrationForm(): ReactElement {
   const { publicAddress, setUniversalProfileAddress } = useContext(Context);
-
-  // form inputs
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [profileImage, setProfileImage] = useState<
-    File | LSP3ProfileImage[] | undefined
-  >(undefined);
-  const [backgroundImage, setBackgroundImage] = useState<
-    File | LSP3ProfileImage[] | undefined
-  >(undefined);
+  const [profileImage, setProfileImage] = useState<File | LSP3ProfileImage[] | undefined>(undefined);
+  const [backgroundImage, setBackgroundImage] = useState<File | LSP3ProfileImage[] | undefined>(undefined);
   const [tags, setTags] = useState<string[]>([]);
   const [linkTitle, setLinkTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [links, setLinks] = useState<LSP3ProfileLink[]>([]);
-
   const profileImageRef = useRef<HTMLInputElement>(null);
   const backgroundImageRef = useRef<HTMLInputElement>(null);
 
@@ -41,6 +34,7 @@ export default function UpRegistrationForm(): ReactElement {
     setLinkTitle('');
     setLinkUrl('');
   };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
