@@ -1,9 +1,6 @@
 import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js';
-import { LSP3Profile, LSP3ProfileJSON } from '@lukso/lsp-factory.js';
 
-export default async function fetchUPData(
-  address: string
-): Promise<LSP3Profile | Error> {
+export default function getERC725Instance(address: string): any {
   const schema: ERC725JSONSchema[] = [
     {
       name: 'SupportedStandards:ERC725Account',
@@ -26,19 +23,15 @@ export default async function fetchUPData(
       valueContent: 'Address',
       valueType: 'address',
     },
+    {
+      name: 'AddressPermissions[]',
+      key: '0xdf30dba06db6a30e65354d9a64c609861f089545ca58c6b4dbe31a5f338cb0e3',
+      keyType: 'Array',
+      valueContent: 'Address',
+      valueType: 'address',
+    },
   ];
   const provider = window.ethereum;
-  const config = {
-    ipfsGateway: 'https://ipfs.lukso.network/ipfs/',
-  };
-
-  const erc725 = new ERC725(schema, address, provider, config);
-  try {
-    const fetchResponse = await erc725.fetchData('LSP3Profile');
-    // const profileJSON = fetchResponse['LSP3Profile'] as LSP3ProfileJSON;
-    const profileJSON = <LSP3ProfileJSON>(<any>fetchResponse['LSP3Profile']);
-    return profileJSON.LSP3Profile;
-  } catch (error) {
-    return new Error('Error fetching universal profile data');
-  }
+  const config = { ipfsGateway: 'https://ipfs.lukso.network/ipfs/' };
+  return new ERC725(schema, address, provider, config);
 }
