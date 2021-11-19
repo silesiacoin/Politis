@@ -5,17 +5,19 @@ export default async function fetchUniversalProfile(
   address: string,
   metamaskAddress: string | null
 ): Promise<LSP3Profile | Error> {
-  const erc725 = getERC725Instance(address);
-  console.log(erc725.fetchData());
+  const subMetamaskAddress = metamaskAddress?.substr(2);
+  const erc725 = getERC725Instance(address, subMetamaskAddress);
   try {
     const fetchPermissions = await erc725.fetchData();
-    const permissionsArray = fetchPermissions['AddressPermissions[]'] as string[];
-    if (permissionsArray.some((permission) => permission === metamaskAddress)) {
+    const permission = fetchPermissions[
+      `AddressPermissions:Permissions:${subMetamaskAddress}`
+    ] as string;
+    if (permission) {
       const fetchProfile = await erc725.fetchData('LSP3Profile');
       const profileJSON = fetchProfile['LSP3Profile'] as LSP3ProfileJSON;
       return profileJSON.LSP3Profile;
     } else {
-      return new Error('Error account is not the owner of universal profile');
+      return new Error('Error account does not have permissions to manage this universal profile');
     }
   } catch {
     return new Error('Error fetching universal profile data');

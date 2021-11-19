@@ -1,6 +1,9 @@
 import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js';
 
-export default function getERC725Instance(address: string): any {
+export default function getERC725Instance(
+  address: string,
+  subMetamaskAddress: string | undefined
+): any {
   const schema: ERC725JSONSchema[] = [
     {
       name: 'SupportedStandards:ERC725Account',
@@ -24,11 +27,11 @@ export default function getERC725Instance(address: string): any {
       valueType: 'address',
     },
     {
-      name: 'AddressPermissions[]',
-      key: '0xdf30dba06db6a30e65354d9a64c609861f089545ca58c6b4dbe31a5f338cb0e3',
-      keyType: 'Array',
-      valueContent: 'Address',
-      valueType: 'address',
+      name: `AddressPermissions:Permissions:${subMetamaskAddress}`,
+      key: `0x4b80742d0000000082ac0000${subMetamaskAddress}`,
+      keyType: 'Bytes20MappingWithGrouping',
+      valueContent: 'Keccak256',
+      valueType: 'bytes32',
     },
   ];
   const provider = window.ethereum;

@@ -46,6 +46,9 @@ export default function App(): ReactElement {
   const [universalProfile, setUniversalProfile] =
     useState<universalProfile | null>(null);
 
+  console.log(universalProfile);
+  
+
   useEffect(() => {
     if (typeof ethereum === undefined) {
       setIsMetamaskInstalled(false);

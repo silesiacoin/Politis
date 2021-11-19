@@ -19,7 +19,7 @@ const UpLoginForm = (): ReactElement => {
       setIsValidAddress(false);
     } else {
       setIsValidAddress(true);
-      setUniversalProfile(fetchUPResponse);
+      setUniversalProfile(fetchUPResponse);      
     }
   };
 
