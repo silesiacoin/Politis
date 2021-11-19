@@ -2,19 +2,19 @@ import React, { useState, useContext, FormEvent, ReactElement } from 'react';
 import { Context } from '../../App';
 import Label from '../atoms/label';
 import InputString from '../atoms/inputString';
-import fetchUPData from '../../functions/erc725';
+import fetchUniversalProfile from '../../functions/fetchUniversalProfile';
 import Submit from '../atoms/submit';
 
 const UpLoginForm = (): ReactElement => {
   const [upAddress, setUpAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(true);
 
-  const { setUniversalProfile } = useContext(Context);
+  const { publicAddress, setUniversalProfile } = useContext(Context);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const fetchUPResponse = await fetchUPData(upAddress);
+    const fetchUPResponse = await fetchUniversalProfile(upAddress, publicAddress);
     if (fetchUPResponse instanceof Error) {
       setIsValidAddress(false);
     } else {
@@ -29,9 +29,7 @@ const UpLoginForm = (): ReactElement => {
         Universal Profile address:
         <InputString
           value={upAddress}
-          onChange={(event) =>
-            setUpAddress((event.target as HTMLTextAreaElement).value)
-          }
+          onChange={(event) => setUpAddress((event.target as HTMLTextAreaElement).value)}
           required
         />
       </Label>
