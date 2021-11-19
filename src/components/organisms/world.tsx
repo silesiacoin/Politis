@@ -47,6 +47,7 @@ export default function World(): ReactElement {
   const [selected, setSelected] = useState<null | Tile>(null);
   const [mainMap, setMainMap] = useState<Map | null>(null);
   const [xy, setXY] = useState<{ x: number, y: number } | null>(null);
+  const [turnOnMouseMovePanel, setTurnOnMouseMovePanel] = useState<boolean>(false);
 
   function zoomMap(map: Map) {
     map.getView().setCenter(proj.transform(berlinMapCor, 'EPSG:4326', 'EPSG:3857'));
@@ -124,6 +125,7 @@ export default function World(): ReactElement {
         if (selectedTiles !== null) {
           selectedTiles.setStyle(undefined);
           selectedTiles = null;
+          setTurnOnMouseMovePanel(false);
         }
 
         map.forEachFeatureAtPixel(e.pixel, function (f: any) {
@@ -136,6 +138,7 @@ export default function World(): ReactElement {
           };
           setSelected(tile);
           f.setStyle(highlightStyle);
+          setTurnOnMouseMovePanel(true);
 
           document.onmousemove = function (e) {
             const x = e.clientX;
@@ -157,7 +160,7 @@ export default function World(): ReactElement {
 
   return (
     <div id={'map'} className={'map'}>
-      {xy !== null &&
+      {turnOnMouseMovePanel &&
         <div className={'select-tile-panel'} style={{
           top: xy?.y,
           left: xy?.x

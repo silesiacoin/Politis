@@ -1,0 +1,7 @@
+.dashboard {
+    &__container {
+        padding: 1rem;
+        border-radius: 1rem;
+        @include flex(column, center, center);
+    }
+}

@@ -1,0 +1,7 @@
+.form {
+    width: 25rem;
+    @include flex(column);
+    label {
+        @include flex(column);
+    }
+}
