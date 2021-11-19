@@ -49,7 +49,7 @@ export default function App(): ReactElement {
           {publicAddress ? (
             <UpRegistration />
           ) : (
-            <p>Please connect your wallet</p>
+            <div>Please connect your wallet</div>
           )}
         </Container>
       </Container>

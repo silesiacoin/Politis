@@ -97,12 +97,12 @@ export default function World(): ReactElement {
 
   return (
     <>
-      {/* <button onClick={() => {
+      <button className={'refresh-button'} onClick={() => {
         setStart(!startCreateMap);
         setOnMap(!onMap);
       }}>
         refresh
-      </button> */}
+      </button>
       {onMap &&
         <div id={'map'} className={'map'}>
           {turnOnMouseMovePanel &&
