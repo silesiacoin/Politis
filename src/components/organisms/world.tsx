@@ -26,10 +26,10 @@ const firstPointsOnMap = [
 ];
 
 interface Tile {
-  id: number,
-  owner: string,
-  price: number,
-  polygon: number[][]
+  id: number;
+  owner: string;
+  price: number;
+  polygon: number[][];
 }
 
 const highlightStyle = new Style({
@@ -148,7 +148,6 @@ export default function World(): ReactElement {
 
           return true;
         });
-
         return true;
       });
 
