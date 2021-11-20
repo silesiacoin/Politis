@@ -9,20 +9,27 @@ import Style from 'ol/style/Style';
 import * as proj from 'ol/proj';
 import { createTiles, Tile } from '../../functions/createTiles';
 import { createMap } from '../../functions/createMap';
+import Modal from './modal';
 
 const berlinMapCor = [13.44, 52.51];
 const mapZoom = 11;
 
 export default function World(): ReactElement {
   const [startCreateMap, setStart] = useState<boolean>(true);
-  const [, setSelected] = useState<null | Tile>(null);
+  const [selected, setSelected] = useState<null | Tile>(null);
   const [onMap, setOnMap] = useState(true);
+  const [onModal, setOnModal] = useState(false);
 
   function zoomMap(map: Map) {
     map.getView().setCenter(proj.transform(berlinMapCor, 'EPSG:4326', 'EPSG:3857'));
     map.getView().setZoom(mapZoom);
     map.getView().setMaxZoom(mapZoom);
     map.getView().setMinZoom(mapZoom);
+  }
+
+  function turnOnModal(tile: Tile) {
+    setSelected(tile);
+    setOnModal(true);
   }
 
   useEffect(() => {
@@ -48,7 +55,7 @@ export default function World(): ReactElement {
             price: f.get('price'),
             polygon: f.get('polygon'),
           };
-          setSelected(tile);
+          turnOnModal(tile);
 
           return true;
         });
@@ -90,11 +97,15 @@ export default function World(): ReactElement {
   return (
     <>
       <button className={'refresh-button'} onClick={() => {
-        setStart(!startCreateMap);
         setOnMap(!onMap);
       }}>
         refresh map
       </button>
+      <Modal
+        selected={selected}
+        isOn={onModal}
+        onFunction={() => setOnModal(!onModal)}
+      />
       {onMap &&
         <div id={'map'} className={'map'}>
         </div>
