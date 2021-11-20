@@ -105,7 +105,27 @@ export default function World(): ReactElement {
         selected={selected}
         isOn={onModal}
         onFunction={() => setOnModal(!onModal)}
-      />
+        clickYes={() => {
+          //
+        }}
+      >
+        <div className={'modal__header'}>
+          <div className={'modal__header__title'}>
+            Do you want to buy a tile?
+          </div>
+        </div>
+        <div className={'modal__body'}>
+          <div className={'modal__body__info'}>
+            id: {selected?.id}
+            <br />
+            owner: {selected?.owner}
+            <br />
+            price: {selected?.price}
+            <br />
+            polygon: {selected?.polygon[0][0]} {selected?.polygon[1][0]} {selected?.polygon[0][1]} {selected?.polygon[1][1]}
+          </div>
+        </div>
+      </Modal>
       {onMap &&
         <div id={'map'} className={'map'}>
         </div>
