@@ -4,6 +4,7 @@ import './scss/main.scss';
 import Header from './components/organisms/header';
 import Container from './components/organisms/container';
 import UpRegistration from './components/organisms/upRegistration';
+import World from './components/organisms/world';
 
 declare global {
   interface Window {
@@ -48,10 +49,11 @@ export default function App(): ReactElement {
           {publicAddress ? (
             <UpRegistration />
           ) : (
-            <p>Please connect your wallet</p>
+            <div>Please connect your wallet</div>
           )}
         </Container>
       </Container>
+      <World />
     </Context.Provider>
   );
 }
