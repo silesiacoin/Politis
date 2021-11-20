@@ -6,6 +6,14 @@
     height: 100vh;
     z-index: 3;
     background-color: rgba(0, 0, 0, 0.6);
+
+    &--on {
+        display: block
+    }
+
+    &--off {
+        display: none
+    }
 }
 
 .modal {

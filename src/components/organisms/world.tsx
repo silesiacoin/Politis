@@ -9,7 +9,7 @@ import Style from 'ol/style/Style';
 import * as proj from 'ol/proj';
 import { createTiles, Tile } from '../../functions/createTiles';
 import { createMap } from '../../functions/createMap';
-import Modal from './modal';
+import Modal from '../molecules/modal';
 
 const berlinMapCor = [13.44, 52.51];
 const mapZoom = 11;
