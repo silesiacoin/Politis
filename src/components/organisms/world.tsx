@@ -15,6 +15,7 @@ const mapZoom = 11;
 
 export default function World(): ReactElement {
   const [startCreateMap, setStart] = useState<boolean>(true);
+  const [, setSelected] = useState<null | Tile>(null);
   const [onMap, setOnMap] = useState(true);
 
   function zoomMap(map: Map) {
@@ -40,7 +41,15 @@ export default function World(): ReactElement {
       let selectedTiles: { setStyle: (arg0: undefined) => void; } | null = null;
 
       map.on('singleclick', function (e) {
-        map.forEachFeatureAtPixel(e.pixel, function () {
+        map.forEachFeatureAtPixel(e.pixel, function (f) {
+          const tile: Tile = {
+            id: f.get('id'),
+            owner: f.get('owner'),
+            price: f.get('price'),
+            polygon: f.get('polygon'),
+          };
+          setSelected(tile);
+
           return true;
         });
         return true;
@@ -61,7 +70,7 @@ export default function World(): ReactElement {
             }),
             stroke: new Stroke({
               color: '#3399CC',
-              width: 3
+              width: 2
             }),
             text: new Text({
               text: myText
