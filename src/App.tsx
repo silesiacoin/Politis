@@ -1,53 +1,31 @@
-import React, {
-  useState,
-  useEffect,
-  createContext,
-  ReactElement,
-  Dispatch,
-  SetStateAction,
-} from 'react';
+import React, { useState, useEffect, ReactElement } from 'react';
+import { Context } from './Context';
 import './scss/main.scss';
 import Header from './components/organisms/header';
 import { LSP3Profile } from '@lukso/lsp-factory.js';
-import UpLoginForm from './components/organisms/upLoginForm';
+import UpLogin from './components/organisms/upLogin';
+import Container from './components/atoms/container';
+import UpRegistration from './components/organisms/upRegistration';
+import World from './components/organisms/world';
 
 declare global {
   interface Window {
     ethereum: any;
   }
+  type StateString = string | null;
+  type UniversalProfile = LSP3Profile | null;
 }
 
-declare type universalProfile = LSP3Profile | null;
-interface ContextInterface {
-  isMetamaskInstalled: boolean;
-  isCorrectNetwork: boolean;
-  setIsCorrectNetwork: Dispatch<SetStateAction<boolean>>;
-  publicAddress: string | null;
-  setPublicAddress: Dispatch<SetStateAction<string | null>>;
-  universalProfile: universalProfile;
-  setUniversalProfile: Dispatch<SetStateAction<universalProfile>>;
-}
-export const Context = createContext<ContextInterface>({
-  isMetamaskInstalled: false,
-  isCorrectNetwork: true,
-  setIsCorrectNetwork: () => false,
-  publicAddress: null,
-  setPublicAddress: () => '',
-  universalProfile: null,
-  setUniversalProfile: () => null,
-});
 
 const { ethereum } = window;
 
 export default function App(): ReactElement {
+  const [shouldRenderRegistration, setShouldRenderRegistration] = useState(false)
   const [isMetamaskInstalled, setIsMetamaskInstalled] = useState(true);
-  const [isCorrectNetwork, setIsCorrectNetwork] = useState<boolean>(true);
-  const [publicAddress, setPublicAddress] = useState<string | null>(null);
-  const [universalProfile, setUniversalProfile] =
-    useState<universalProfile | null>(null);
-
-  console.log(universalProfile);
-  
+  const [isCorrectNetwork, setIsCorrectNetwork] = useState(true);
+  const [publicAddress, setPublicAddress] = useState<StateString>(null);
+  const [universalProfileJSON, setUniversalProfileJSON] = useState<UniversalProfile>(null);
+  const [universalProfileAddress, setUniversalProfileAddress] = useState<StateString>(null);
 
   useEffect(() => {
     if (typeof ethereum === undefined) {
@@ -67,11 +45,29 @@ export default function App(): ReactElement {
         setIsCorrectNetwork,
         publicAddress,
         setPublicAddress,
-        universalProfile,
-        setUniversalProfile,
+        universalProfileJSON,
+        setUniversalProfileJSON,
+        universalProfileAddress,
+        setUniversalProfileAddress,
       }}>
-      <Header />
-      <UpLoginForm />
+      <Container className='dashboard'>
+        <Header />
+        {publicAddress ? (
+          universalProfileJSON ? (
+            <World />
+          ) : (
+            <Container className='dashboard__container'>
+              {shouldRenderRegistration ? (
+                <UpRegistration setShouldRenderRegistration={setShouldRenderRegistration} />
+              ) : (
+                <UpLogin setShouldRenderRegistration={setShouldRenderRegistration} />
+              )}
+            </Container>
+          )
+        ) : (
+          <Container className='dashboard__container'>Please connect your wallet</Container>
+        )}
+      </Container>
     </Context.Provider>
   );
 }

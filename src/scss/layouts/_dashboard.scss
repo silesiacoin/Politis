@@ -1,0 +1,14 @@
+.dashboard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: $white;
+
+    &__container {
+        padding: 8px;
+        border-radius: 1rem;
+        @include flex(column, center, center);
+    }
+}

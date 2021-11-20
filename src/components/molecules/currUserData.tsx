@@ -1,5 +1,5 @@
 import React, { useContext, ReactElement } from 'react';
-import { Context } from '../../App';
+import { Context } from '../../Context';
 import UserNameDiv from '../atoms/userNameDiv';
 
 export default function CurrUserData(): ReactElement {
