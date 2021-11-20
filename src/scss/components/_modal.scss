@@ -1,0 +1,55 @@
+.background-for-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3;
+    background-color: rgba(0, 0, 0, 0.6);
+
+    &--on {
+        display: block
+    }
+
+    &--off {
+        display: none
+    }
+}
+
+.modal {
+    background-color: white;
+    padding: 2rem;
+    width: 100%;
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10rem;
+    border-radius: 0.5rem;
+
+    &__header {
+        margin-bottom: 1rem;
+
+        &__title {
+            font-size: 1.6rem;
+            text-align: center;
+        }
+    }
+
+    &__body {
+        margin-bottom: 1rem;
+    }
+
+    &__buttons {
+        width: 100%;
+        max-width: 14rem;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2rem;
+    }
+}
+
+.modal-button {
+    &--right {
+        float: right
+    }
+}
