@@ -2,7 +2,9 @@ import React, { useState, useEffect, ReactElement } from 'react';
 import { Context } from './Context';
 import './scss/main.scss';
 import Header from './components/organisms/header';
-import Container from './components/organisms/container';
+import { LSP3Profile } from '@lukso/lsp-factory.js';
+import UpLogin from './components/organisms/upLogin';
+import Container from './components/atoms/container';
 import UpRegistration from './components/organisms/upRegistration';
 import World from './components/organisms/world';
 
@@ -11,16 +13,19 @@ declare global {
     ethereum: any;
   }
   type StateString = string | null;
+  type UniversalProfile = LSP3Profile | null;
 }
+
 
 const { ethereum } = window;
 
 export default function App(): ReactElement {
+  const [shouldRenderRegistration, setShouldRenderRegistration] = useState(false)
   const [isMetamaskInstalled, setIsMetamaskInstalled] = useState(true);
-  const [isCorrectNetwork, setIsCorrectNetwork] = useState<boolean>(true);
+  const [isCorrectNetwork, setIsCorrectNetwork] = useState(true);
   const [publicAddress, setPublicAddress] = useState<StateString>(null);
-  const [universalProfileAddress, setUniversalProfileAddress] =
-    useState<StateString>(null);
+  const [universalProfileJSON, setUniversalProfileJSON] = useState<UniversalProfile>(null);
+  const [universalProfileAddress, setUniversalProfileAddress] = useState<StateString>(null);
 
   useEffect(() => {
     if (typeof ethereum === undefined) {
@@ -40,20 +45,29 @@ export default function App(): ReactElement {
         setIsCorrectNetwork,
         publicAddress,
         setPublicAddress,
+        universalProfileJSON,
+        setUniversalProfileJSON,
         universalProfileAddress,
         setUniversalProfileAddress,
       }}>
       <Container className='dashboard'>
         <Header />
-        <Container className='dashboard__container'>
-          {publicAddress ? (
-            <UpRegistration />
+        {publicAddress ? (
+          universalProfileJSON ? (
+            <World />
           ) : (
-            <div>Please connect your wallet</div>
-          )}
-        </Container>
+            <Container className='dashboard__container'>
+              {shouldRenderRegistration ? (
+                <UpRegistration setShouldRenderRegistration={setShouldRenderRegistration} />
+              ) : (
+                <UpLogin setShouldRenderRegistration={setShouldRenderRegistration} />
+              )}
+            </Container>
+          )
+        ) : (
+          <Container className='dashboard__container'>Please connect your wallet</Container>
+        )}
       </Container>
-      <World />
     </Context.Provider>
   );
 }

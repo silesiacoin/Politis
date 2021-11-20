@@ -1169,6 +1169,14 @@
     web3-eth-abi "^1.5.2"
     web3-utils "^1.5.2"
 
+"@erc725/erc725.js@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@erc725/erc725.js/-/erc725.js-0.7.0.tgz#a21f251d402f055e2c70812b0281346fd15890cc"
+  integrity sha512-wFEejDkrVsb6WXxY2qr6SwLGWAmdjZCjkNQVtdEJWHy7aB1mQllRTFjmjI+Q+VgpxyAVsEu6GrJcL8KZJNh72A==
+  dependencies:
+    web3-eth-abi "^1.5.2"
+    web3-utils "^1.5.2"
+
 "@eslint/eslintrc@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.3.0.tgz#d736d6963d7003b6514e6324bec9c602ac340318"
@@ -4646,9 +4654,9 @@ brorand@^1.0.1, brorand@^1.1.0:
   integrity sha1-EsJe/kCkXjwyPrhnWgoM5XsiNx8=
 
 browser-image-compression@^1.0.15:
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/browser-image-compression/-/browser-image-compression-1.0.16.tgz#753dd245733971295014526293325dd9e39effb7"
-  integrity sha512-jQzclogfr0FX3+JupRtEkB4MWZqfImoLucS+IroAvY6w1Wkmu6nnx4PfKVEFQqk8pGXMTdDHORNDt4vwDO26AQ==
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/browser-image-compression/-/browser-image-compression-1.0.17.tgz#5b97bb65297dadfee123be6c40ecb355c4758cf2"
+  integrity sha512-TMDh3gyNlVA5Vvn0D0AdWr33s2ftIeokHK406z8cYlLJ4ANAq1x6eMaSzqedDoZwUGyTVB+0rhNVaSFgM3YAZg==
   dependencies:
     core-js "^3.16.1"
     uzip "0.20201231.0"

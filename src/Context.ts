@@ -5,9 +5,11 @@ interface ContextInterface {
   isCorrectNetwork: boolean;
   setIsCorrectNetwork: Dispatch<SetStateAction<boolean>>;
   publicAddress: string | null;
-  setPublicAddress: Dispatch<SetStateAction<string | null>>;
-  universalProfileAddress: string | null;
-  setUniversalProfileAddress: Dispatch<SetStateAction<string | null>>;
+  setPublicAddress: Dispatch<SetStateAction<StateString>>;
+  universalProfileJSON: UniversalProfile;
+  setUniversalProfileJSON: Dispatch<SetStateAction<UniversalProfile>>;
+  universalProfileAddress: StateString;
+  setUniversalProfileAddress: Dispatch<SetStateAction<StateString>>;
 }
 export const Context = createContext<ContextInterface>({
   isMetamaskInstalled: false,
@@ -15,6 +17,8 @@ export const Context = createContext<ContextInterface>({
   setIsCorrectNetwork: () => false,
   publicAddress: null,
   setPublicAddress: () => '',
+  universalProfileJSON: null,
+  setUniversalProfileJSON: () => null,
   universalProfileAddress: null,
   setUniversalProfileAddress: () => '',
 });

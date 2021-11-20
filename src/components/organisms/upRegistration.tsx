@@ -1,9 +1,14 @@
-import React, { Fragment, ReactElement, useContext } from 'react';
+import React, { Fragment, Dispatch, ReactElement, SetStateAction, useContext } from 'react';
 import { DEPLOYING } from '../../constants/status';
 import { Context } from '../../Context';
+import Button from '../atoms/button';
 import UpRegistrationForm from './upRegistrationForm';
 
-const UpRegistration = (): ReactElement => {
+interface Props {
+  setShouldRenderRegistration: Dispatch<SetStateAction<boolean>>;
+}
+
+const UpRegistration = ({ setShouldRenderRegistration }: Props): ReactElement => {
   const { universalProfileAddress } = useContext(Context);
 
   return (
@@ -13,10 +18,9 @@ const UpRegistration = (): ReactElement => {
       ) : !universalProfileAddress ? (
         <UpRegistrationForm />
       ) : (
-        <p>
-          Your deployed universal profile address: {universalProfileAddress}
-        </p>
+        <p>Your deployed universal profile address: {universalProfileAddress}</p>
       )}
+      <Button onClick={() => setShouldRenderRegistration(false)}>Go back</Button>
     </Fragment>
   );
 };
