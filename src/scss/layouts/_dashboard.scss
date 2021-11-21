@@ -7,7 +7,8 @@
     background-color: $white;
 
     &__container {
-        padding: 8px;
+        width: 100%;
+        padding: 4rem 1rem 1rem 1rem;
         border-radius: 1rem;
         @include flex(column, center, center);
     }
