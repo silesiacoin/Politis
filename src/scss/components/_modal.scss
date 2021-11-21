@@ -6,18 +6,14 @@
     height: 100vh;
     z-index: 3;
     background-color: rgba(0, 0, 0, 0.6);
-
+    display: none;
     &--on {
         display: block
-    }
-
-    &--off {
-        display: none
     }
 }
 
 .modal {
-    background-color: white;
+    background: $primary-600;
     padding: 2rem;
     width: 100%;
     max-width: 40rem;

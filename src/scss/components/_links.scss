@@ -1,0 +1,6 @@
+.links {
+    color: $white;
+    &__item {
+        @include flex($justify: space-between);
+    }
+}

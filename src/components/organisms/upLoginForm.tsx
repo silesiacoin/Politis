@@ -24,7 +24,7 @@ const UpLoginForm = (): ReactElement => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className='form' onSubmit={handleSubmit}>
       <Label>
         Universal Profile address:
         <InputString

@@ -1,21 +1,15 @@
-body {
-  color: $black;
+body,
+a,
+button,
+input[type='submit'] {
+  color: $white;
   font-family: $base-font-family;
 }
 h1,
 h2,
 h3,
 h4 {
-  font-weight: 450;
   padding: 0.25rem 0;
-}
-h1,
-h2,
-h3,
-h4,
-a,
-button {
-  font-family: $base-font-family;
 }
 h1 {
   font-size: $h1-font-size;
@@ -29,18 +23,11 @@ h2 {
 h3 {
   font-size: $h3-font-size;
 }
-h4,
-a,
-button {
+h4 {
   font-size: $h4-font-size;
 }
 a {
   text-decoration: none;
-  color: $black;
-}
-input {
-  font-family: $base-font-family;
-  font-size: 1rem;
 }
 p {
   padding: 1.5rem 0;

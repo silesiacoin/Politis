@@ -1,4 +1,4 @@
-//media queries
+// media queries
 @mixin tablet-desktop {
   @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
     @content;
@@ -14,7 +14,7 @@
     @content;
   }
 }
-//multi purposed flex mixin
+// multi purposed flex mixin
 @mixin flex($direction: row, $justify: start, $align: flex-start) {
   display: flex;
   flex-wrap: wrap;
@@ -28,10 +28,14 @@
     align-items: $align;
   }
 }
-//default padding mixin
+// default padding mixin
 @mixin padding($size: 1rem) {
-  padding: 0.25rem $size;
+  padding: $size;
 }
 @mixin text-center {
   text-align: center;
+}
+// box shadow
+@mixin shadow($offset, $blur) {
+  box-shadow: $offset $offset $blur rgba(0,0,0,0.3);
 }
