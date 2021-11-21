@@ -7,7 +7,15 @@
     background-color: $white;
 
     &__container {
-        padding: 8px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 0;
+        padding-top: 4rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-bottom: 1rem;
         border-radius: 1rem;
         @include flex(column, center, center);
     }
