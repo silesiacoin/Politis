@@ -122,9 +122,9 @@ export default function World(): ReactElement {
 
           console.log(myNFT);
 
-          const d = myNFT.methods.totalSupply().call();
+          const numberOfAllTokens = myNFT.methods.totalSupply().call();
 
-          console.log(d)
+          console.log(numberOfAllTokens)
         }
       }}>
         create assets
