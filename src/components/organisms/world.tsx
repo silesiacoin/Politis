@@ -98,7 +98,7 @@ export default function World(): ReactElement {
   return (
     <Fragment>
       <Button classes={'button button--refresh'} onClick={() => setOnMap(!onMap)}>
-        refresh map
+        Refresh map
       </Button>
       <Modal
         selected={selected}
@@ -107,11 +107,11 @@ export default function World(): ReactElement {
         clickYes={() => {
           //
         }}>
-        <div className={'modal__header'}>
-          <div className={'modal__header__title'}>Do you want to buy a tile?</div>
+        <div className={'modal__panel__header'}>
+          <h4>Do you want to buy a tile?</h4>
         </div>
-        <div className={'modal__body'}>
-          <div className={'modal__body__info'}>
+        <div className={'modal__panel__body'}>
+          <div className={'modal__panel__body__info'}>
             id: {selected?.id}
             <br />
             owner: {selected?.owner}

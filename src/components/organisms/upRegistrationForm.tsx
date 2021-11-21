@@ -89,11 +89,11 @@ export default function UpRegistrationForm(): ReactElement {
       </Label>
       <Label>
         Profile picture:
-        <input type='file' ref={profileImageRef} />
+        <input className='form__input-type' type='file' ref={profileImageRef} />
       </Label>
       <Label>
         Backround picture:
-        <input type='file' ref={backgroundImageRef} />
+        <input className='form__input-type' type='file' ref={backgroundImageRef} />
       </Label>
       <h4>Profile links:</h4>
       <Label>
@@ -110,7 +110,7 @@ export default function UpRegistrationForm(): ReactElement {
           onChange={(event) => setLinkUrl((event.target as HTMLTextAreaElement).value)}
         />
       </Label>
-      <Button onClick={handleAddLink}>Add to list</Button>
+      <Button classes='button--margin' onClick={handleAddLink}>Add to list</Button>
       <LinkList links={links} handleRemoveLink={handleRemoveLink} />
       <Submit value='Create profile' />
     </form>

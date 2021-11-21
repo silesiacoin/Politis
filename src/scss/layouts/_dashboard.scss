@@ -3,11 +3,14 @@
     height: 100vh;
     background: $primary-300;
     @include flex($justify: center, $align: center);
+
     &__container {
         border-radius: 2rem;
         background: $primary-600;
         @include shadow(0.5rem, 1rem);
         @include padding;
         @include flex(column);
+        max-width: 25rem;
+        width: 100%;
     }
 }

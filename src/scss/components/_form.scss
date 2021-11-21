@@ -1,7 +1,20 @@
 .form {
-    width: 25rem;
     @include flex(column);
+
     label {
         @include flex(column);
     }
+
+    &__input-type {
+        padding: 0
+    }
+}
+
+input {
+    outline: none;
+    padding: 0.5rem 1rem;
+}
+
+.margin-top {
+    margin-top: 1rem;
 }

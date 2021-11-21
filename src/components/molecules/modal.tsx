@@ -12,10 +12,10 @@ interface Props {
 
 export default function Modal(Props: Props): ReactElement {
   return (
-    <div className={`background-for-modal ${Props.isOn && 'background-for-modal--on'}`}>
-      <div className='modal'>
+    <div className={`modal ${Props.isOn && 'modal--on'}`}>
+      <div className='modal__panel'>
         {Props.children}
-        <div className='modal__buttons'>
+        <div className='modal__panel__buttons'>
           <Button
             onClick={() => {
               Props.onFunction(false);
@@ -23,7 +23,7 @@ export default function Modal(Props: Props): ReactElement {
             }}>
             Yes
           </Button>
-          <Button classes='modal-button--right' onClick={() => Props.onFunction(false)}>
+          <Button classes='modal__panel__buttons__button-right' onClick={() => Props.onFunction(false)}>
             No
           </Button>
         </div>

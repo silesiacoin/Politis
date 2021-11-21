@@ -6,7 +6,12 @@
   background: $primary-600;
   @include padding;
   @include flex($justify: space-between, $align: center);
+
   button {
     margin: 0 0.5rem;
   }
+}
+
+.float-info {
+  float: left;
 }

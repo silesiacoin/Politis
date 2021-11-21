@@ -5,12 +5,16 @@
     cursor: pointer;
     @include shadow(0.25rem, 0.5rem);
     @include padding(0.5rem 1rem);
+    font-weight: bold;
+
     &--small {
         width: auto;
     }
+
     &--margin {
         margin-top: 1rem;
     }
+
     &--refresh {
         margin-left: 0.5rem;
         position: absolute;
