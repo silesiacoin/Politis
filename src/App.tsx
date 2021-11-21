@@ -26,7 +26,7 @@ export default function App(): ReactElement {
   const [publicAddress, setPublicAddress] = useState<StateString>(null);
   const [universalProfileJSON, setUniversalProfileJSON] = useState<UniversalProfile>(null);
   const [universalProfileAddress, setUniversalProfileAddress] = useState<StateString>(null);
-
+  
   useEffect(() => {
     if (typeof ethereum === undefined) {
       setIsMetamaskInstalled(false);

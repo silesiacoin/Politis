@@ -10,7 +10,7 @@ const UpLoginForm = (): ReactElement => {
   const [isValidAddress, setIsValidAddress] = useState(true);
 
   const { publicAddress, setUniversalProfileJSON } = useContext(Context);
-
+  
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 

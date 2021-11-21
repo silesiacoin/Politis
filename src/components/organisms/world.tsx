@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useEffect, useState } from 'react';
+import React, { Fragment, ReactElement, useContext, useEffect, useState } from 'react';
 import Map from 'ol/Map';
 import 'ol/ol.css';
 import * as turf from '@turf/turf';
@@ -11,6 +11,12 @@ import { createTiles, Tile } from '../../functions/createTiles';
 import { createMap } from '../../functions/createMap';
 import Modal from '../molecules/modal';
 import Button from '../atoms/button';
+import { Context } from '../../Context';
+import { getSigner } from '../../functions/getSigner';
+import { RPC_URL } from '../../constants/chain';
+import { LSPFactory } from '@lukso/lsp-factory.js';
+import LSP8IdentifiableDigitalAsset from '@lukso/universalprofile-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json';
+import Web3 from 'web3';
 
 const berlinMapCor = [13.44, 52.51];
 const mapZoom = 11;
@@ -20,6 +26,7 @@ export default function World(): ReactElement {
   const [selected, setSelected] = useState<null | Tile>(null);
   const [onMap, setOnMap] = useState(true);
   const [onModal, setOnModal] = useState(false);
+  const { universalProfileJSON } = useContext(Context);
 
   function zoomMap(map: Map) {
     map.getView().setCenter(proj.transform(berlinMapCor, 'EPSG:4326', 'EPSG:3857'));
@@ -97,9 +104,37 @@ export default function World(): ReactElement {
 
   return (
     <Fragment>
-      <Button classes={'button button--refresh'} onClick={() => setOnMap(!onMap)}>
-        refresh map
+      <Button classes={'button button--refresh'} onClick={async () => {
+        const signer = await getSigner();
+        const provider = RPC_URL;
+        const web3 = new Web3(provider);
+
+        if (signer !== null) {
+          const lspFactory = new LSPFactory(provider, signer);
+          const myDigitalAsset = await lspFactory.DigitalAsset.deployLSP8IdentifiableDigitalAsset({
+            name: 'My token',
+            symbol: 'TKN',
+            ownerAddress: '0xd546712237e80335Ef1F5AF619176ECA28cf6023', // Account which will own the Token Contract
+          });
+
+          const abi: any = LSP8IdentifiableDigitalAsset.abi;
+          const myNFT = new web3.eth.Contract(
+            abi,
+            myDigitalAsset.LSP8IdentifiableDigitalAsset.address
+          );
+
+          console.log(myNFT);
+
+          const d = myNFT.methods.totalSupply().call();
+
+          console.log(d)
+        }
+      }}>
+        create assets
       </Button>
+      {/* <Button classes={'button button--refresh'} onClick={() => setOnMap(!onMap)}>
+        refresh map
+      </Button> */}
       <Modal
         selected={selected}
         isOn={onModal}
