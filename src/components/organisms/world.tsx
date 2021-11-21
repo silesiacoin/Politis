@@ -107,7 +107,7 @@ export default function World(): ReactElement {
         const web3 = new Web3(provider);
 
         if (signer !== null) {
-          const lspFactory = new LSPFactory(provider, signer);
+          const lspFactory = await new LSPFactory(provider, signer);
           const myDigitalAsset = await lspFactory.DigitalAsset.deployLSP8IdentifiableDigitalAsset({
             name: 'My token',
             symbol: 'TKN',
@@ -115,16 +115,20 @@ export default function World(): ReactElement {
           });
 
           const abi: any = LSP8IdentifiableDigitalAsset.abi;
-          const myNFT = new web3.eth.Contract(
+          const myNFT = await new web3.eth.Contract(
             abi,
             myDigitalAsset.LSP8IdentifiableDigitalAsset.address
           );
 
-          console.log(myNFT);
+          console.log(myDigitalAsset.LSP8IdentifiableDigitalAsset.address);
 
-          const numberOfAllTokens = myNFT.methods.totalSupply().call();
+          const numberOfAllTokens = await myNFT.methods.totalSupply().call();
 
           console.log(numberOfAllTokens)
+
+          const owner = await myNFT.methods.owner().call();
+
+          console.log(owner)
         }
       }}>
         create assets
