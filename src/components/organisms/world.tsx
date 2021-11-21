@@ -10,6 +10,11 @@ import * as proj from 'ol/proj';
 import { createTiles, Tile } from '../../functions/createTiles';
 import { createMap } from '../../functions/createMap';
 import Modal from '../molecules/modal';
+import { LSPFactory } from '@lukso/lsp-factory.js';
+import { RPC_URL } from '../../constants/chain';
+import { getSigner } from '../../functions/getSigner';
+import LSP8IdentifiableDigitalAsset from '@lukso/universalprofile-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json';
+import Web3 from 'web3';
 
 const berlinMapCor = [13.44, 52.51];
 const mapZoom = 11;
@@ -96,6 +101,34 @@ export default function World(): ReactElement {
 
   return (
     <>
+      <button className={'refresh-button'} style={{top: 160}} onClick={async () => {
+        const signer = await getSigner();
+        const provider = RPC_URL;
+        const web3 = new Web3(provider);
+
+        if (signer !== null) {
+          const lspFactory = new LSPFactory(provider, signer);
+          const myDigitalAsset = await lspFactory.DigitalAsset.deployLSP8IdentifiableDigitalAsset({
+            name: 'My token',
+            symbol: 'TKN',
+            ownerAddress: '0xd546712237e80335Ef1F5AF619176ECA28cf6023', // Account which will own the Token Contract
+          });
+
+          const abi: any = LSP8IdentifiableDigitalAsset.abi;
+          const myNFT = new web3.eth.Contract(
+            abi,
+            myDigitalAsset.LSP8IdentifiableDigitalAsset.address
+          );
+
+          console.log(myNFT);
+
+          const d = myNFT.methods.totalSupply().call();
+
+          console.log(d)
+        }
+      }}>
+        create assets
+      </button>
       <button className={'refresh-button'} onClick={() => {
         setOnMap(!onMap);
       }}>
