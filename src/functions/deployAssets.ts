@@ -4,6 +4,7 @@ import { LSPFactory } from '@lukso/lsp-factory.js';
 import { RPC_URL } from '../constants/chain';
 import { getSigner } from './getSigner';
 import Web3 from 'web3';
+import fetchAssetData from './fetchAssetData';
 
 export default async function deployAssets(
   id: number,
@@ -13,6 +14,8 @@ export default async function deployAssets(
   const provider = RPC_URL;
   const web3 = new Web3(window.ethereum);
   const signer = await getSigner();
+  const keyManagerAbi: any = KeyManager.abi;
+  const lsp8Abi: any = LSP8IdentifiableDigitalAsset.abi;
   if (signer) {
     try {
       const lspFactory = await new LSPFactory(provider, signer);
@@ -23,18 +26,16 @@ export default async function deployAssets(
       });
       const assetAddress = asset.LSP8IdentifiableDigitalAsset.address;
 
-      const universalProfileAbi: any = LSP8IdentifiableDigitalAsset.abi;
-      const erc725Contract = new web3.eth.Contract(universalProfileAbi, universalProfileAddress);
-
-      const keyManagerAddress = await erc725Contract.methods.owner().call();
-      const keyManagerAbi: any = KeyManager.abi;
+      const universalProfileContract = new web3.eth.Contract(lsp8Abi, universalProfileAddress);
+      const keyManagerAddress = await universalProfileContract.methods.owner().call();
       const keyManagerContract = new web3.eth.Contract(keyManagerAbi, keyManagerAddress);
-
-      const payload = await erc725Contract.methods
+      const upPayload = await universalProfileContract.methods
         .setData(['0x3a47ab5bd3a594c3a8995f8fa58d0876c96819ca4516bd76100c92462f2f9dc0'], [assetAddress])
         .encodeABI();
+      keyManagerContract.methods.execute(upPayload).send({ from: metamaskAddress, gas: 475_000 });
 
-      keyManagerContract.methods.execute(payload).send({ from: metamaskAddress, gas: 475_000 });
+      const assetData = fetchAssetData(assetAddress);
+      console.log(assetData);
     } catch (error) {
       console.error('error deploying the asset', error);
     }
