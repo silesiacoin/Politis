@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { Fragment, ReactElement, useEffect, useState } from 'react';
 import Map from 'ol/Map';
 import 'ol/ol.css';
 import * as turf from '@turf/turf';
@@ -10,6 +10,7 @@ import * as proj from 'ol/proj';
 import { createTiles, Tile } from '../../functions/createTiles';
 import { createMap } from '../../functions/createMap';
 import Modal from '../molecules/modal';
+import Button from '../atoms/button';
 
 const berlinMapCor = [13.44, 52.51];
 const mapZoom = 11;
@@ -45,7 +46,7 @@ export default function World(): ReactElement {
       const features = turf.featureCollection(allTiles);
       const map = createMap(features);
       zoomMap(map);
-      let selectedTiles: { setStyle: (arg0: undefined) => void; } | null = null;
+      let selectedTiles: { setStyle: (arg0: undefined) => void } | null = null;
 
       map.on('singleclick', function (e) {
         map.forEachFeatureAtPixel(e.pixel, function (f) {
@@ -73,15 +74,15 @@ export default function World(): ReactElement {
           const myText = 'id: ' + f.get('id');
           const highlightStyle = new Style({
             fill: new Fill({
-              color: 'rgba(255,255,255,0.7)'
+              color: 'rgba(255,255,255,0.7)',
             }),
             stroke: new Stroke({
               color: '#3399CC',
-              width: 2
+              width: 2,
             }),
             text: new Text({
-              text: myText
-            })
+              text: myText,
+            }),
           });
           f.setStyle(highlightStyle);
 
@@ -95,41 +96,34 @@ export default function World(): ReactElement {
   }, [startCreateMap]);
 
   return (
-    <>
-      <button className={'refresh-button'} onClick={() => {
-        setOnMap(!onMap);
-      }}>
-        refresh map
-      </button>
+    <Fragment>
+      <Button classes={'button button--refresh'} onClick={() => setOnMap(!onMap)}>
+        Refresh map
+      </Button>
       <Modal
         selected={selected}
         isOn={onModal}
         onFunction={() => setOnModal(!onModal)}
         clickYes={() => {
           //
-        }}
-      >
-        <div className={'modal__header'}>
-          <div className={'modal__header__title'}>
-            Do you want to buy a tile?
-          </div>
+        }}>
+        <div className={'modal__panel__header'}>
+          <h4>Do you want to buy a tile?</h4>
         </div>
-        <div className={'modal__body'}>
-          <div className={'modal__body__info'}>
+        <div className={'modal__panel__body'}>
+          <div className={'modal__panel__body__info'}>
             id: {selected?.id}
             <br />
             owner: {selected?.owner}
             <br />
             price: {selected?.price}
             <br />
-            polygon: {selected?.polygon[0][0]} {selected?.polygon[1][0]} {selected?.polygon[0][1]} {selected?.polygon[1][1]}
+            polygon: {selected?.polygon[0][0]} {selected?.polygon[1][0]} {selected?.polygon[0][1]}{' '}
+            {selected?.polygon[1][1]}
           </div>
         </div>
       </Modal>
-      {onMap &&
-        <div id={'map'} className={'map'}>
-        </div>
-      }
-    </>
+      {onMap && <div id={'map'} className={'map'}></div>}
+    </Fragment>
   );
 }

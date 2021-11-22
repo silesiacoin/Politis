@@ -22,12 +22,13 @@ export default function UpRegistrationForm(): ReactElement {
   const [description, setDescription] = useState('');
   const [profileImage, setProfileImage] = useState<File | LSP3ProfileImage[] | undefined>(undefined);
   const [backgroundImage, setBackgroundImage] = useState<File | LSP3ProfileImage[] | undefined>(undefined);
-  const [tags, setTags] = useState<string[]>([]);
   const [linkTitle, setLinkTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [links, setLinks] = useState<LSP3ProfileLink[]>([]);
   const profileImageRef = useRef<HTMLInputElement>(null);
   const backgroundImageRef = useRef<HTMLInputElement>(null);
+
+  const tags = ['Public profile'];
 
   const handleAddLink = () => {
     setLinks([...links, { title: linkTitle, url: linkUrl }]);
@@ -35,19 +36,15 @@ export default function UpRegistrationForm(): ReactElement {
     setLinkUrl('');
   };
 
+  const handleRemoveLink = (title: string) => setLinks(links.filter((item) => item.title !== title));
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (
-      profileImageRef.current !== null &&
-      profileImageRef.current.files !== null
-    )
+    if (profileImageRef.current !== null && profileImageRef.current.files !== null)
       setProfileImage(profileImageRef.current.files[0]);
 
-    if (
-      backgroundImageRef.current !== null &&
-      backgroundImageRef.current.files !== null
-    )
+    if (backgroundImageRef.current !== null && backgroundImageRef.current.files !== null)
       setBackgroundImage(backgroundImageRef.current.files[0]);
 
     const profileData = {
@@ -56,18 +53,14 @@ export default function UpRegistrationForm(): ReactElement {
       profileImage,
       backgroundImage,
       tags,
-      links: [{ title: 'My Website', url: 'www.my-website.com' }],
+      links,
     };
 
     const signer = await getSigner();
     if (publicAddress && signer) {
       setUniversalProfileAddress(DEPLOYING);
 
-      const universalProfile = await deployUP(
-        publicAddress,
-        signer,
-        profileData
-      );
+      const universalProfile = await deployUP(publicAddress, signer, profileData);
 
       setUniversalProfileAddress(universalProfile);
     } else {
@@ -82,59 +75,43 @@ export default function UpRegistrationForm(): ReactElement {
         Name:
         <InputString
           value={name}
-          onChange={(event) =>
-            setName((event.target as HTMLTextAreaElement).value)
-          }
+          onChange={(event) => setName((event.target as HTMLTextAreaElement).value)}
+          required
         />
       </Label>
       <Label>
         Description:
         <InputString
           value={description}
-          onChange={(event) =>
-            setDescription((event.target as HTMLTextAreaElement).value)
-          }
+          onChange={(event) => setDescription((event.target as HTMLTextAreaElement).value)}
+          required
         />
       </Label>
       <Label>
         Profile picture:
-        <input type='file' ref={profileImageRef} />
+        <input className='form__input-type' type='file' ref={profileImageRef} />
       </Label>
       <Label>
         Backround picture:
-        <input type='file' ref={backgroundImageRef} />
-      </Label>
-      <Label>
-        Tags:
-        <InputString
-          value={tags.join(', ')}
-          onChange={(event) =>
-            setTags((event.target as HTMLTextAreaElement).value.split(', '))
-          }
-        />
+        <input className='form__input-type' type='file' ref={backgroundImageRef} />
       </Label>
       <h4>Profile links:</h4>
       <Label>
         Link title:
         <InputString
           value={linkTitle}
-          onChange={(event) =>
-            setLinkTitle((event.target as HTMLTextAreaElement).value)
-          }
+          onChange={(event) => setLinkTitle((event.target as HTMLTextAreaElement).value)}
         />
       </Label>
       <Label>
         Link url:
         <InputString
           value={linkUrl}
-          onChange={(event) =>
-            setLinkUrl((event.target as HTMLTextAreaElement).value)
-          }
+          onChange={(event) => setLinkUrl((event.target as HTMLTextAreaElement).value)}
         />
       </Label>
-      <Button onClick={handleAddLink}>Add to list</Button>
-      <h4>Links:</h4>
-      <LinkList links={links} />
+      <Button classes='button--margin' onClick={handleAddLink}>Add to list</Button>
+      <LinkList links={links} handleRemoveLink={handleRemoveLink} />
       <Submit value='Create profile' />
     </form>
   );

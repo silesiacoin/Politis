@@ -1,6 +1,5 @@
-import React, { Dispatch, ReactElement, SetStateAction } from 'react';
+import React, { Fragment, Dispatch, ReactElement, SetStateAction } from 'react';
 import Button from '../atoms/button';
-import Container from '../atoms/container';
 import UpLoginForm from './upLoginForm';
 
 interface Props {
@@ -9,13 +8,13 @@ interface Props {
 
 const upLogin = ({ setShouldRenderRegistration }: Props): ReactElement => {
   return (
-    <Container>
-      <h4>Log into your universal profile</h4>
+    <Fragment>
+      <h2>Log into your universal profile</h2>
       <UpLoginForm />
-      <Button onClick={() => setShouldRenderRegistration(true)}>
-        I don&lsquo;t have a universal profile
+      <Button classes='button--margin' onClick={() => setShouldRenderRegistration(true)}>
+        I don&lsquo;t have a Universal Profile
       </Button>
-    </Container>
+    </Fragment>
   );
 };
 
