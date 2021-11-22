@@ -1,4 +1,5 @@
 import LSP8IdentifiableDigitalAsset from '@lukso/universalprofile-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json';
+import KeyManager from '@lukso/universalprofile-smart-contracts/artifacts/LSP6KeyManager.json';
 import { LSPFactory } from '@lukso/lsp-factory.js';
 import { flattenEncodedData } from '@erc725/erc725.js';
 import { RPC_URL } from '../constants/chain';
@@ -12,14 +13,13 @@ export default async function deployAssets(
   universalProfileAddress: string,
   metamaskAddress: string
 ): Promise<void> {
-  const web3 = new Web3();
-  const signer = await getSigner();
   const provider = RPC_URL;
+  const web3 = new Web3(window.ethereum);
+  const signer = await getSigner();
   const subMetamaskAddress = metamaskAddress?.substr(2);
   const schema = getAdminSchema(subMetamaskAddress);
   const erc725 = getERC725Instance(universalProfileAddress, schema);
   const previousERC725Data = await erc725.getData([
-    'SupportedStandards:ERC725Account',
     'LSP3Profile',
     'LSP1UniversalReceiverDelegate',
     `AddressPermissions:Permissions:${subMetamaskAddress}`,
@@ -37,29 +37,33 @@ export default async function deployAssets(
       });
       const assetAddress = asset.LSP8IdentifiableDigitalAsset.address;
 
-      console.log(asset);
-      console.log('chyba adres kontraktu: ', assetAddress);
+      console.log(assetAddress);
 
       const encodedData = erc725.encodeData({
         ...previousERC725Data,
         'LSP3IssuedAssets[]': [assetAddress],
       });
-      console.log(encodedData);
 
       const dataToSaveOnChain = flattenEncodedData(encodedData);
       console.log(dataToSaveOnChain);
-      dataToSaveOnChain.forEach(({ key, value }) => console.log(key, value));
 
-      const abi: any = LSP8IdentifiableDigitalAsset.abi;
-      const erc725Contract = new web3.eth.Contract(abi, universalProfileAddress);
-      console.log(erc725Contract);
-
-      const arrayOfPromises = dataToSaveOnChain.map(
-        async ({ key, value }) => await erc725Contract.methods.setData(key, value).send()
+      const keyManagerAbi: any = KeyManager.abi;
+      const keyManagerContract = new web3.eth.Contract(
+        keyManagerAbi,
+        '0x997c07250887170ae47b512df50341c36d7c7d82'
       );
-      console.log(arrayOfPromises);
-      const saved = await Promise.all(arrayOfPromises);
-      console.log(saved);
+
+      const universalProfileAbi: any = LSP8IdentifiableDigitalAsset.abi;
+      const erc725Contract = new web3.eth.Contract(universalProfileAbi, universalProfileAddress);
+      console.log(erc725Contract);
+      console.log(await erc725Contract.methods.owner().call());
+
+      const keys = dataToSaveOnChain.map(({ key }) => key);
+      const values = dataToSaveOnChain.map(({ value }) => value);
+
+      const payload = await erc725Contract.methods.setData(keys, values).encodeABI();
+
+      keyManagerContract.methods.execute(payload).send({ from: metamaskAddress, gas: 475_000 });
     } catch (error) {
       console.error('error deploying the asset', error);
     }

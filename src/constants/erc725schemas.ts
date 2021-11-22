@@ -2,13 +2,6 @@ import { ERC725JSONSchema } from '@erc725/erc725.js';
 
 export const getBasicSchema = (subMetamaskAddress: string): ERC725JSONSchema[] => [
   {
-    name: 'SupportedStandards:ERC725Account',
-    key: '0xeafec4d89fa9619884b6b89135626455000000000000000000000000afdeb5d6',
-    keyType: 'Mapping',
-    valueContent: '0xafdeb5d6',
-    valueType: 'bytes',
-  },
-  {
     name: 'LSP3Profile',
     key: '0x5ef83ad9559033e6e941db7d7c495acdce616347d28e90c7ce47cbfcfcad3bc5',
     keyType: 'Singleton',
@@ -32,13 +25,6 @@ export const getBasicSchema = (subMetamaskAddress: string): ERC725JSONSchema[] =
 ];
 
 export const getAdminSchema = (subMetamaskAddress: string): ERC725JSONSchema[] => [
-  {
-    name: 'SupportedStandards:ERC725Account',
-    key: '0xeafec4d89fa9619884b6b89135626455000000000000000000000000afdeb5d6',
-    keyType: 'Mapping',
-    valueContent: '0xafdeb5d6',
-    valueType: 'bytes',
-  },
   {
     name: 'LSP3Profile',
     key: '0x5ef83ad9559033e6e941db7d7c495acdce616347d28e90c7ce47cbfcfcad3bc5',
