@@ -101,34 +101,40 @@ export default function World(): ReactElement {
 
   return (
     <>
-      <button className={'refresh-button'} style={{top: 160}} onClick={async () => {
+      <button className={'refresh-button'} style={{ top: 160 }} onClick={async () => {
         const signer = await getSigner();
         const provider = RPC_URL;
         const web3 = new Web3(provider);
 
         if (signer !== null) {
           const lspFactory = await new LSPFactory(provider, signer);
+
+          console.log('tworzenie asset');
+
           const myDigitalAsset = await lspFactory.DigitalAsset.deployLSP8IdentifiableDigitalAsset({
             name: 'My token',
-            symbol: 'TKN',
+            symbol: 'EMB',
             ownerAddress: '0xd546712237e80335Ef1F5AF619176ECA28cf6023', // Account which will own the Token Contract
           });
+
+          console.log('koniec');
+          console.log('tworzenie kontraktu');
 
           const abi: any = LSP8IdentifiableDigitalAsset.abi;
           const myNFT = await new web3.eth.Contract(
             abi,
             myDigitalAsset.LSP8IdentifiableDigitalAsset.address
           );
-
-          console.log(myDigitalAsset.LSP8IdentifiableDigitalAsset.address);
-
-          const numberOfAllTokens = await myNFT.methods.totalSupply().call();
-
-          console.log(numberOfAllTokens)
+          
+          console.log('chyba adres kontraktu: ' + myDigitalAsset.LSP8IdentifiableDigitalAsset.address)
+          console.log('koniec');
+          console.log(myNFT);
 
           const owner = await myNFT.methods.owner().call();
+          console.log(owner);
 
-          console.log(owner)
+          // const decimals = await myNFT.methods.decimals().call();
+          // console.log(decimals);
         }
       }}>
         create assets
