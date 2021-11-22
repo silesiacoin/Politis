@@ -1,12 +1,9 @@
 import LSP8IdentifiableDigitalAsset from '@lukso/universalprofile-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json';
 import KeyManager from '@lukso/universalprofile-smart-contracts/artifacts/LSP6KeyManager.json';
 import { LSPFactory } from '@lukso/lsp-factory.js';
-import { flattenEncodedData } from '@erc725/erc725.js';
 import { RPC_URL } from '../constants/chain';
 import { getSigner } from './getSigner';
-import getERC725Instance from './getERC725Instance';
 import Web3 from 'web3';
-import { getAdminSchema } from '../constants/erc725schemas';
 
 export default async function deployAssets(
   id: number,
@@ -16,17 +13,6 @@ export default async function deployAssets(
   const provider = RPC_URL;
   const web3 = new Web3(window.ethereum);
   const signer = await getSigner();
-  const subMetamaskAddress = metamaskAddress?.substr(2);
-  const schema = getAdminSchema(subMetamaskAddress);
-  const erc725 = getERC725Instance(universalProfileAddress, schema);
-  const previousERC725Data = await erc725.getData([
-    'LSP3Profile',
-    'LSP1UniversalReceiverDelegate',
-    `AddressPermissions:Permissions:${subMetamaskAddress}`,
-  ]);
-  console.log(previousERC725Data);
-  //   const previousIssuedAssets = erc725.getData('IssuedAssets[]');
-
   if (signer) {
     try {
       const lspFactory = await new LSPFactory(provider, signer);
@@ -37,31 +23,16 @@ export default async function deployAssets(
       });
       const assetAddress = asset.LSP8IdentifiableDigitalAsset.address;
 
-      console.log(assetAddress);
-
-      const encodedData = erc725.encodeData({
-        ...previousERC725Data,
-        'LSP3IssuedAssets[]': [assetAddress],
-      });
-
-      const dataToSaveOnChain = flattenEncodedData(encodedData);
-      console.log(dataToSaveOnChain);
-
-      const keyManagerAbi: any = KeyManager.abi;
-      const keyManagerContract = new web3.eth.Contract(
-        keyManagerAbi,
-        '0x997c07250887170ae47b512df50341c36d7c7d82'
-      );
-
       const universalProfileAbi: any = LSP8IdentifiableDigitalAsset.abi;
       const erc725Contract = new web3.eth.Contract(universalProfileAbi, universalProfileAddress);
-      console.log(erc725Contract);
-      console.log(await erc725Contract.methods.owner().call());
 
-      const keys = dataToSaveOnChain.map(({ key }) => key);
-      const values = dataToSaveOnChain.map(({ value }) => value);
+      const keyManagerAddress = await erc725Contract.methods.owner().call();
+      const keyManagerAbi: any = KeyManager.abi;
+      const keyManagerContract = new web3.eth.Contract(keyManagerAbi, keyManagerAddress);
 
-      const payload = await erc725Contract.methods.setData(keys, values).encodeABI();
+      const payload = await erc725Contract.methods
+        .setData(['0x3a47ab5bd3a594c3a8995f8fa58d0876c96819ca4516bd76100c92462f2f9dc0'], [assetAddress])
+        .encodeABI();
 
       keyManagerContract.methods.execute(payload).send({ from: metamaskAddress, gas: 475_000 });
     } catch (error) {
