@@ -6,6 +6,8 @@ import { getSigner } from './getSigner';
 import Web3 from 'web3';
 import fetchAssetData from './fetchAssetData';
 
+const ISSUED_ASSETS_KEY = '0x3a47ab5bd3a594c3a8995f8fa58d0876c96819ca4516bd76100c92462f2f9dc0';
+
 export default async function deployAssets(
   id: number,
   universalProfileAddress: string,
@@ -29,10 +31,13 @@ export default async function deployAssets(
       const keyManagerAddress = await universalProfileContract.methods.owner().call();
       const keyManagerContract = new web3.eth.Contract(keyManagerAbi, keyManagerAddress);
       const upPayload = await universalProfileContract.methods
-        .setData(['0x3a47ab5bd3a594c3a8995f8fa58d0876c96819ca4516bd76100c92462f2f9dc0'], [assetAddress])
+        .setData(
+          [ISSUED_ASSETS_KEY, ISSUED_ASSETS_KEY.slice(0, 34) + id.toString().padStart(32, '0')],
+          [id + 1, assetAddress]
+        )
         .encodeABI();
       keyManagerContract.methods.execute(upPayload).send({ from: metamaskAddress, gas: 475_000 });
-      console.log('assetAddress: ' + assetAddress)
+      console.log('assetAddress: ' + assetAddress);
       const assetData = fetchAssetData(assetAddress);
       console.log(assetData);
     } catch (error) {

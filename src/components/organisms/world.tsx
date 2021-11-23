@@ -114,8 +114,8 @@ export default function World(): ReactElement {
         style={{ top: 200 }}
         onClick={() => {
           console.log('click');
-          if (universalProfileAddress && publicAddress) {
-            fetchAdminProfile(universalProfileAddress, publicAddress);
+          if (universalProfileAddress) {
+            console.log(fetchAdminProfile(universalProfileAddress));
           }
 
           return;
