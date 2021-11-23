@@ -25,7 +25,6 @@ export default async function deployAssets(
         ownerAddress: universalProfileAddress,
       });
       const assetAddress = asset.LSP8IdentifiableDigitalAsset.address;
-
       const universalProfileContract = new web3.eth.Contract(lsp8Abi, universalProfileAddress);
       const keyManagerAddress = await universalProfileContract.methods.owner().call();
       const keyManagerContract = new web3.eth.Contract(keyManagerAbi, keyManagerAddress);

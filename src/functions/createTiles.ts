@@ -1,4 +1,5 @@
 import * as turf from '@turf/turf';
+import fetchAdminProfile from './fetchAdminProfile';
 
 export interface Tile {
   id: number;
@@ -35,6 +36,9 @@ export function createTiles(): turf.helpers.Feature<turf.helpers.Polygon, Tile>[
         [firstPointsOnMap[3][0] + sideB, firstPointsOnMap[3][1] - sideA],
         [firstPointsOnMap[0][0] + sideB, firstPointsOnMap[0][1] - sideA]
       ];
+
+      // TODO
+      // fetchAdminProfile('ADMIN universalProfileAddress', 'ADMIN publicAddress');
 
       const info: Tile = {
         id: arrayLength,
