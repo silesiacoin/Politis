@@ -1,5 +1,4 @@
 import * as turf from '@turf/turf';
-import fetchAdminProfile from './fetchAdminProfile';
 
 export interface Tile {
   id: number;
@@ -13,10 +12,10 @@ const sideBoxB = 0.05;
 const numberTilesInCol = 6;
 const numberCols = 15;
 const firstPointsOnMap = [
-  [13, 52.70],
+  [13, 52.7],
   [13, 52.75],
   [13.05, 52.75],
-  [13.05, 52.70]
+  [13.05, 52.7],
 ];
 
 export function createTiles(): turf.helpers.Feature<turf.helpers.Polygon, Tile>[] {
@@ -34,7 +33,7 @@ export function createTiles(): turf.helpers.Feature<turf.helpers.Polygon, Tile>[
         [firstPointsOnMap[1][0] + sideB, firstPointsOnMap[1][1] - sideA],
         [firstPointsOnMap[2][0] + sideB, firstPointsOnMap[2][1] - sideA],
         [firstPointsOnMap[3][0] + sideB, firstPointsOnMap[3][1] - sideA],
-        [firstPointsOnMap[0][0] + sideB, firstPointsOnMap[0][1] - sideA]
+        [firstPointsOnMap[0][0] + sideB, firstPointsOnMap[0][1] - sideA],
       ];
 
       // TODO
@@ -44,7 +43,7 @@ export function createTiles(): turf.helpers.Feature<turf.helpers.Polygon, Tile>[
         id: arrayLength,
         owner: null,
         price: null,
-        polygon: poly
+        polygon: poly,
       };
 
       allTiles[arrayLength] = turf.polygon([poly], info);
