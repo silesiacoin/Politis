@@ -7,6 +7,7 @@ import UpLogin from './components/organisms/upLogin';
 import Container from './components/atoms/container';
 import UpRegistration from './components/organisms/upRegistration';
 import World from './components/organisms/world';
+import PanelUp from './components/organisms/panelUP';
 
 declare global {
   interface Window {
@@ -67,6 +68,7 @@ export default function App(): ReactElement {
         ) : (
           <Container className='dashboard__container'>Please connect your wallet</Container>
         )}
+        <PanelUp />
       </Container>
     </Context.Provider>
   );

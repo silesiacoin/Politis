@@ -1,0 +1,38 @@
+.panelUP {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+  background: $primary-600;
+  @include flex($justify: space-between, $align: center);
+
+  &__background {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    padding: 0.5rem;
+
+    &__description {
+      float: left;
+      margin-right: 1rem;
+    }
+  }
+
+  .avatar {
+    float: left;
+    margin-right: 1rem;
+    background-color: $white;
+    padding: 2px;
+    border-radius: 100%;
+
+    &__image {
+      height: 44px;
+      width: 44px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      border-radius: 100%;
+    }
+  }
+}
