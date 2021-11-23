@@ -1,15 +1,11 @@
+// This file contains all combined -dir.scss import files
 @charset 'utf-8';
 
-//this file contains all combined -dir.scss import files
-
-//font
-@import url("https://fonts.googleapis.com/css2?family=Gruppo&family=Lato&display=swap");
-
-//abstracts
+// abstracts
 @import "./abstracts/_abstracts-dir";
-//base
+// base
 @import "./base/_base-dir";
-//components
+// components
 @import "./components/_components-dir";
-//layouts
+// layouts
 @import "./layouts/_layouts-dir";

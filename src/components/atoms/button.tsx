@@ -7,16 +7,8 @@ interface Props {
   children: string;
 }
 
-const Button = ({
-  onClick,
-  classes,
-  disabled,
-  children,
-}: Props): ReactElement => (
-  <button
-    className={classes ? `button ${classes}` : 'button'}
-    onClick={onClick}
-    disabled={disabled}>
+const Button = ({ onClick, classes, disabled, children }: Props): ReactElement => (
+  <button type='button' className={classes ? `button ${classes}` : 'button'} onClick={onClick} disabled={disabled}>
     {children}
   </button>
 );

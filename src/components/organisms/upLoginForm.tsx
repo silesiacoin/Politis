@@ -25,7 +25,7 @@ const UpLoginForm = (): ReactElement => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className='form' onSubmit={handleSubmit}>
       <Label>
         Universal Profile address:
         <InputString
@@ -34,9 +34,7 @@ const UpLoginForm = (): ReactElement => {
           required
         />
       </Label>
-
       {!isValidAddress && <p>Provided invalid address</p>}
-
       {upAddress ? (
         <Submit value='Log into your Universal Profile' />
       ) : (

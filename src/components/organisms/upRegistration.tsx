@@ -20,7 +20,7 @@ const UpRegistration = ({ setShouldRenderRegistration }: Props): ReactElement =>
       ) : (
         <p>Your deployed universal profile address: {universalProfileAddress}</p>
       )}
-      <Button onClick={() => setShouldRenderRegistration(false)}>Go back</Button>
+      <Button classes='button--margin' onClick={() => setShouldRenderRegistration(false)}>Go back</Button>
     </Fragment>
   );
 };
