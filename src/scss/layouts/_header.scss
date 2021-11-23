@@ -4,14 +4,16 @@
   width: 100%;
   z-index: 10;
   background: $primary-600;
-  @include padding;
+  padding-left: 1rem;
+  padding-right: 1rem;
   @include flex($justify: space-between, $align: center);
+  min-height: 52px;
 
   button {
     margin: 0 0.5rem;
   }
 }
 
-.float-info {
+.float-left {
   float: left;
 }

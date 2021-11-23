@@ -2,7 +2,6 @@ import React, {
   useState,
   ReactElement,
   FormEvent,
-  useRef,
   useContext,
 } from 'react';
 import { LSP3ProfileImage, LSP3ProfileLink } from '@lukso/lsp-factory.js';
@@ -20,13 +19,11 @@ export default function UpRegistrationForm(): ReactElement {
   const { publicAddress, setUniversalProfileAddress } = useContext(Context);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [profileImage, setProfileImage] = useState<File | LSP3ProfileImage[] | undefined>(undefined);
-  const [backgroundImage, setBackgroundImage] = useState<File | LSP3ProfileImage[] | undefined>(undefined);
   const [linkTitle, setLinkTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [links, setLinks] = useState<LSP3ProfileLink[]>([]);
-  const profileImageRef = useRef<HTMLInputElement>(null);
-  const backgroundImageRef = useRef<HTMLInputElement>(null);
+  const [profileImageUrl, setProfilePicture] = useState('');
+  const [backgroundImageUrl, setBackroundPicture] = useState('');
 
   const tags = ['Public profile'];
 
@@ -40,14 +37,22 @@ export default function UpRegistrationForm(): ReactElement {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const profileImage: LSP3ProfileImage[] = [{
+      width: 200,
+      height: 200,
+      hashFunction: '',
+      hash: '',
+      url: profileImageUrl,
+    }];
+    const backgroundImage: LSP3ProfileImage[] = [{
+      width: 1344,
+      height: 250,
+      hashFunction: '',
+      hash: '',
+      url: backgroundImageUrl
+    }];
 
-    if (profileImageRef.current !== null && profileImageRef.current.files !== null)
-      setProfileImage(profileImageRef.current.files[0]);
-
-    if (backgroundImageRef.current !== null && backgroundImageRef.current.files !== null)
-      setBackgroundImage(backgroundImageRef.current.files[0]);
-
-    const profileData = {
+    const profileData: UniversalProfile = {
       name,
       description,
       profileImage,
@@ -88,12 +93,18 @@ export default function UpRegistrationForm(): ReactElement {
         />
       </Label>
       <Label>
-        Profile picture:
-        <input className='form__input-type' type='file' ref={profileImageRef} />
+        Profile picture url:
+        <InputString
+          value={profileImageUrl}
+          onChange={(event) => setProfilePicture((event.target as HTMLTextAreaElement).value)}
+        />
       </Label>
       <Label>
-        Backround picture:
-        <input className='form__input-type' type='file' ref={backgroundImageRef} />
+        Backround picture url:
+        <InputString
+          value={backgroundImageUrl}
+          onChange={(event) => setBackroundPicture((event.target as HTMLTextAreaElement).value)}
+        />
       </Label>
       <h4>Profile links:</h4>
       <Label>
