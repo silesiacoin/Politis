@@ -33,7 +33,7 @@ export default async function deployAssets(
         .setData(['0x3a47ab5bd3a594c3a8995f8fa58d0876c96819ca4516bd76100c92462f2f9dc0'], [assetAddress])
         .encodeABI();
       keyManagerContract.methods.execute(upPayload).send({ from: metamaskAddress, gas: 475_000 });
-
+      console.log('assetAddress: ' + assetAddress)
       const assetData = fetchAssetData(assetAddress);
       console.log(assetData);
     } catch (error) {

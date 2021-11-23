@@ -12,6 +12,7 @@ import { createMap } from '../../functions/createMap';
 import Modal from '../molecules/modal';
 import { Context } from '../../Context';
 import deployAssets from '../../functions/deployAssets';
+import fetchAdminProfile from '../../functions/fetchAdminProfile';
 
 const berlinMapCor = [13.44, 52.51];
 const mapZoom = 11;
@@ -107,6 +108,19 @@ export default function World(): ReactElement {
           if (universalProfileAddress && publicAddress) deployAssets(1, universalProfileAddress, publicAddress);
         }}>
         create assets
+      </button>
+      <button
+        className={'refresh-button'}
+        style={{ top: 200 }}
+        onClick={() => {
+          console.log('click');
+          if (universalProfileAddress && publicAddress) {
+            fetchAdminProfile(universalProfileAddress, publicAddress);
+          }
+
+          return;
+        }}>
+        get assets from UP
       </button>
       <button
         className={'refresh-button'}
