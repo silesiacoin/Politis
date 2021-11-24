@@ -1,5 +1,6 @@
-import Web3 from 'web3';
 import getCityContract from './getCityContract';
+import GetKeyManager from './getKeyManager';
+import GetWeb3 from './getWeb3';
 
 interface Props {
   currentPrice: string;
@@ -7,11 +8,15 @@ interface Props {
   gasPrice: number;
   gas: number;
   tileLocator: number | undefined;
-  upAddress: string;
+  upBuyerAddress: string;
 }
 
-export function buyTile({ currentPrice, from, gasPrice, gas, tileLocator, upAddress }: Props): void | Error {
-  const web3 = new Web3(window.ethereum);
+export function buyTile({ currentPrice, from, gasPrice, gas, tileLocator, upBuyerAddress }: Props): void | Error {
+  // const web3 = GetWeb3();
+
+  const keyManager = GetKeyManager({
+    upAddress: upBuyerAddress
+  });
 
   const transactionObject = {
     from: from,
@@ -21,11 +26,21 @@ export function buyTile({ currentPrice, from, gasPrice, gas, tileLocator, upAddr
   };
 
   try {
+
+    // KET MANAGER EXECUTE
+
+    //@ts-ignore
+    keyManager.methods.execute()
+
+
+
+    // OLD POLITIS BUY TILE FUNCTION
+
     // web3.eth.estimateGas(transactionObject)
     //   .then((gas: number) => {
     //     const transactionObject = gas * 10;
     //     const citiesContract = getCityContract();
-    //     citiesContract.methods.buyTile(tileLocator, upAddress).send(transactionObject, () => {
+    //     citiesContract.methods.buyTile(tileLocator, upBuyerAddress).send(transactionObject, () => {
     //       console.log('buy success')
     //       return;
     //     });

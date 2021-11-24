@@ -121,7 +121,7 @@ export default function World(): ReactElement {
           gasPrice: 500000,
           gas: 0,
           tileLocator: selected?.id,
-          upAddress: ''
+          upBuyerAddress: ''
         })}>
         <div className={'modal__panel__header'}>
           <h4>Do you want to buy a tile?</h4>
