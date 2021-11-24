@@ -11,6 +11,7 @@ import { createTiles, Tile } from '../../functions/createTiles';
 import { createMap } from '../../functions/createMap';
 import Modal from '../molecules/modal';
 import Button from '../atoms/button';
+import Loader from '../atoms/loader';
 
 const berlinMapCor = [13.44, 52.51];
 const mapZoom = 11;
@@ -20,6 +21,7 @@ export default function World(): ReactElement {
   const [selected, setSelected] = useState<null | Tile>(null);
   const [onMap, setOnMap] = useState(true);
   const [onModal, setOnModal] = useState(false);
+  const [loadingOn, setLoadingOn] = useState(true);
 
   function zoomMap(map: Map) {
     map.getView().setCenter(proj.transform(berlinMapCor, 'EPSG:4326', 'EPSG:3857'));
@@ -37,12 +39,13 @@ export default function World(): ReactElement {
     if (!startCreateMap && !onMap) {
       setOnMap(!onMap);
       setStart(!startCreateMap);
+      setLoadingOn(true);
     }
   }, [onMap, startCreateMap]);
 
   useEffect(() => {
-    if (startCreateMap) {
-      const allTiles: turf.helpers.Feature<turf.helpers.Polygon, Tile>[] = createTiles();
+    async function start() {
+      const allTiles: turf.helpers.Feature<turf.helpers.Polygon, Tile>[] = await createTiles();
       const features = turf.featureCollection(allTiles);
       const map = createMap(features);
       zoomMap(map);
@@ -91,12 +94,19 @@ export default function World(): ReactElement {
         return true;
       });
 
+      setLoadingOn(false);
       return setStart(false);
+    }
+    if (startCreateMap) {
+      start();
     }
   }, [startCreateMap]);
 
   return (
     <Fragment>
+      {loadingOn &&
+        <Loader info={'Creating a map'} />
+      }
       <Button classes={'button button--refresh'} onClick={() => setOnMap(!onMap)}>
         Refresh map
       </Button>
