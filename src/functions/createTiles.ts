@@ -1,6 +1,6 @@
 import * as turf from '@turf/turf';
 import Web3 from 'web3';
-import { abi } from '../constants/abi';
+import { citiesAbi } from '../constants/abi';
 
 export interface Tile {
   id: number;
@@ -27,7 +27,7 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
   let sideB = sideBoxB;
   let arrayLength = 0;
   const web3 = new Web3(window.ethereum);
-  const myAbi: any = abi;
+  const myAbi: any = citiesAbi;
 
   const allTiles = [];
   for (let i = 0; i < numberCols; i++) {
