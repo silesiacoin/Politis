@@ -48,7 +48,7 @@ export default function Navbar(): ReactElement {
       )}
       {!isCorrectNetwork && <ChangeNetworkDiv />}
       {universalProfileJSON && (
-        <Button onClick={() => setUniversalProfileJSON(null)}>Log out</Button>
+        <Button onClick={() => setUniversalProfileJSON(null)}>Disconnect UP</Button>
       )}
     </nav>
   );

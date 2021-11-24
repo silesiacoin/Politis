@@ -75,7 +75,7 @@ export default function UpRegistrationForm(): ReactElement {
     <form className='form' onSubmit={handleSubmit}>
       <h4>Profile data:</h4>
       <Label>
-        Name:
+        Name:*
         <InputString
           value={name}
           onChange={(event) => setName((event.target as HTMLTextAreaElement).value)}
@@ -83,7 +83,7 @@ export default function UpRegistrationForm(): ReactElement {
         />
       </Label>
       <Label>
-        Description:
+        Description:*
         <InputString
           value={description}
           onChange={(event) => setDescription((event.target as HTMLTextAreaElement).value)}
@@ -119,6 +119,7 @@ export default function UpRegistrationForm(): ReactElement {
           onChange={(event) => setLinkUrl((event.target as HTMLTextAreaElement).value)}
         />
       </Label>
+      * required
       <Button classes='button--margin' onClick={handleAddLink}>Add to list</Button>
       <LinkList links={links} handleRemoveLink={handleRemoveLink} />
       <Submit value='Create profile' />

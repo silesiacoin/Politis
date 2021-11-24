@@ -13,7 +13,7 @@ import Modal from '../molecules/modal';
 import Button from '../atoms/button';
 import Loader from '../atoms/loader';
 
-const berlinMapCor = [13.44, 52.51];
+const berlinMapCor = [13.402, 52.51];
 const mapZoom = 11;
 
 export default function World(): ReactElement {
@@ -119,6 +119,11 @@ export default function World(): ReactElement {
         }}>
         <div className={'modal__panel__header'}>
           <h4>Do you want to buy a tile?</h4>
+        </div>
+        <div className={'modal__panel__header'}>
+          <h5>
+            After purchase, the value of the tile will be doubled. When someone buys the tile from you, you will get its value. The commission is charged on the purchase.
+          </h5>
         </div>
         <div className={'modal__panel__body'}>
           <div className={'modal__panel__body__info'}>

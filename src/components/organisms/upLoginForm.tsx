@@ -27,6 +27,9 @@ const UpLoginForm = (): ReactElement => {
   return (
     <form className='form' onSubmit={handleSubmit}>
       <Label>
+        <p>
+          Your UP address must match your address (creator) in MetaMask.
+        </p>
         Universal Profile address:
         <InputString
           value={upAddress}
@@ -36,9 +39,9 @@ const UpLoginForm = (): ReactElement => {
       </Label>
       {!isValidAddress && <p>Provided invalid address</p>}
       {upAddress ? (
-        <Submit value='Log into your Universal Profile' />
+        <Submit value='Connect your Universal Profile' />
       ) : (
-        <Submit value='Log into your Universal Profile' disabled />
+        <Submit value='Connect your Universal Profile' disabled />
       )}
     </form>
   );
