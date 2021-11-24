@@ -17,7 +17,6 @@ declare global {
   type UniversalProfile = LSP3Profile | null;
 }
 
-
 const { ethereum } = window;
 
 export default function App(): ReactElement {
@@ -66,7 +65,7 @@ export default function App(): ReactElement {
             </Container>
           )
         ) : (
-          <Container className='dashboard__container'>Please connect your wallet</Container>
+          <Container className='dashboard__container'>Please connect your wallet.</Container>
         )}
         <PanelUp />
       </Container>

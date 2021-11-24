@@ -6,7 +6,8 @@ import fetchUniversalProfile from '../../functions/fetchUniversalProfile';
 import Submit from '../atoms/submit';
 
 const UpLoginForm = (): ReactElement => {
-  const [upAddress, setUpAddress] = useState('');
+  const local = localStorage.getItem('UP');
+  const [upAddress, setUpAddress] = useState(local ? local : '');
   const [isValidAddress, setIsValidAddress] = useState(true);
 
   const { publicAddress, setUniversalProfileJSON } = useContext(Context);

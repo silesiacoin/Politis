@@ -24,7 +24,6 @@ export default function UpRegistrationForm(): ReactElement {
   const [links, setLinks] = useState<LSP3ProfileLink[]>([]);
   const [profileImageUrl, setProfilePicture] = useState('');
   const [backgroundImageUrl, setBackroundPicture] = useState('');
-
   const tags = ['Public profile'];
 
   const handleAddLink = () => {
@@ -64,10 +63,9 @@ export default function UpRegistrationForm(): ReactElement {
     const signer = await getSigner();
     if (publicAddress && signer) {
       setUniversalProfileAddress(DEPLOYING);
-
       const universalProfile = await deployUP(publicAddress, signer, profileData);
-
       setUniversalProfileAddress(universalProfile);
+      localStorage.setItem('UP', universalProfile);
     } else {
       console.error('Error: Metamask not connected');
     }

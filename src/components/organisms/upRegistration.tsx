@@ -2,6 +2,7 @@ import React, { Fragment, Dispatch, ReactElement, SetStateAction, useContext } f
 import { DEPLOYING } from '../../constants/status';
 import { Context } from '../../Context';
 import Button from '../atoms/button';
+import Loader from '../atoms/loader';
 import UpRegistrationForm from './upRegistrationForm';
 
 interface Props {
@@ -14,13 +15,17 @@ const UpRegistration = ({ setShouldRenderRegistration }: Props): ReactElement =>
   return (
     <Fragment>
       {universalProfileAddress === DEPLOYING ? (
-        <p>Your universal profile is currently being deployed</p>
+        <div>
+          <Loader info={'Creating account'} />
+          <p>Your universal profile is currently being deployed. This may take a while. Wait until the process is over.</p>
+          <p>The process requires (8) approvals in metamask.</p>
+        </div>
       ) : !universalProfileAddress ? (
         <UpRegistrationForm />
       ) : (
         <p>Your deployed universal profile address: {universalProfileAddress}</p>
       )}
-      <Button classes='button--margin' onClick={() => setShouldRenderRegistration(false)}>Go back</Button>
+      <Button classes='button--margin' onClick={() => setShouldRenderRegistration(false)}>Cancel</Button>
     </Fragment>
   );
 };
