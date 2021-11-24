@@ -12,6 +12,7 @@ import { createMap } from '../../functions/createMap';
 import Modal from '../molecules/modal';
 import Button from '../atoms/button';
 import Loader from '../atoms/loader';
+import { buyTile } from '../../functions/buyTile';
 
 const berlinMapCor = [13.44, 52.51];
 const mapZoom = 11;
@@ -114,9 +115,14 @@ export default function World(): ReactElement {
         selected={selected}
         isOn={onModal}
         onFunction={() => setOnModal(!onModal)}
-        clickYes={() => {
-          //
-        }}>
+        clickYes={() => buyTile({
+          from: '',
+          currentPrice: '',
+          gasPrice: 500000,
+          gas: 0,
+          tileLocator: selected?.id,
+          upAddress: ''
+        })}>
         <div className={'modal__panel__header'}>
           <h4>Do you want to buy a tile?</h4>
         </div>

@@ -1,6 +1,5 @@
 import * as turf from '@turf/turf';
-import Web3 from 'web3';
-import { citiesAbi } from '../constants/abi';
+import getCityContract from './getCityContract';
 
 export interface Tile {
   id: number;
@@ -20,14 +19,10 @@ const firstPointsOnMap = [
   [13.05, 52.7]
 ];
 
-const contractAddress = '0xD38CfFCe6B3eFbB87C33Fc75aBA0df351fd1B5e3';
-
 export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.Polygon, Tile>[]> {
   let sideA = sideBoxA;
   let sideB = sideBoxB;
   let arrayLength = 0;
-  const web3 = new Web3(window.ethereum);
-  const myAbi: any = citiesAbi;
 
   const allTiles = [];
   for (let i = 0; i < numberCols; i++) {
@@ -46,7 +41,7 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
       let tileResponse;
 
       try {
-        citiesContract = new web3.eth.Contract(myAbi, contractAddress);
+        citiesContract = getCityContract();
         tileResponse = await citiesContract.methods.tiles(arrayLength).call();
       } catch {
         new Error('Error fetching tile data');

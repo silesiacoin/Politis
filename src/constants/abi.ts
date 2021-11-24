@@ -1,43 +1,25 @@
 export const citiesAbi = [
     {
-        'inputs': [
-            {
-                'internalType': 'uint256',
-                'name': 'tileLocator',
-                'type': 'uint256'
-            }
-        ],
-        'name': 'buyTile',
-        'outputs': [],
-        'stateMutability': 'payable',
-        'type': 'function'
-    },
-    {
         'inputs': [],
         'stateMutability': 'payable',
         'type': 'constructor'
     },
     {
-        'inputs': [],
-        'name': 'city',
-        'outputs': [
+        'inputs': [
             {
                 'internalType': 'uint256',
-                'name': 'area',
+                'name': 'tileLocator',
                 'type': 'uint256'
             },
             {
-                'internalType': 'uint256',
-                'name': 'citizens',
-                'type': 'uint256'
-            },
-            {
-                'internalType': 'string',
-                'name': 'name',
-                'type': 'string'
+                'internalType': 'address payable',
+                'name': 'upAddress',
+                'type': 'address'
             }
         ],
-        'stateMutability': 'view',
+        'name': 'buyTile',
+        'outputs': [],
+        'stateMutability': 'payable',
         'type': 'function'
     },
     {
