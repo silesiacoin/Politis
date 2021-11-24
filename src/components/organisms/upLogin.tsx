@@ -9,7 +9,7 @@ interface Props {
 const upLogin = ({ setShouldRenderRegistration }: Props): ReactElement => {
   return (
     <Fragment>
-      <h2>Log into your universal profile</h2>
+      <h2>Connect your Universal Profile</h2>
       <UpLoginForm />
       <Button classes='button--margin' onClick={() => setShouldRenderRegistration(true)}>
         I don&lsquo;t have a Universal Profile
