@@ -17,7 +17,6 @@ declare global {
   type UniversalProfile = LSP3Profile | null;
 }
 
-
 const { ethereum } = window;
 
 export default function App(): ReactElement {
@@ -66,7 +65,11 @@ export default function App(): ReactElement {
             </Container>
           )
         ) : (
-          <Container className='dashboard__container'>Please connect your wallet</Container>
+          <Container className='dashboard__container'>
+            <div>
+              Please connect your wallet with <span><a href='https://metamask.io/' target='_blank' rel='noreferrer'>MetaMask</a></span>.
+            </div>
+          </Container>
         )}
         <PanelUp />
       </Container>

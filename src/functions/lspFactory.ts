@@ -14,6 +14,6 @@ export async function deployUP(
     controllingAccounts: [publicAddress],
     lsp3Profile: profileData,
   });
-  const contractAddress = contract.ERC725Account.address;
-  return contractAddress;
+  const contractAddress = contract?.ERC725Account?.address;
+  return contractAddress ? contractAddress : '';
 }

@@ -1,4 +1,4 @@
-import React, { useContext, ReactElement } from 'react';
+import React, { useContext, ReactElement, useState, useEffect } from 'react';
 import { Context } from '../../Context';
 import connectMetamask from '../../functions/connectMetamask';
 import Button from '../atoms/button';
@@ -13,6 +13,7 @@ export default function Navbar(): ReactElement {
     universalProfileJSON,
     setUniversalProfileJSON,
   } = useContext(Context);
+  const [startGame, setStartGame] = useState(true);
 
   const handleConnect = async () => {
     const { isCorrectNetwork, account } = await connectMetamask();
@@ -20,7 +21,21 @@ export default function Navbar(): ReactElement {
     setIsCorrectNetwork(true);
     setPublicAddress(account);
   };
+
   const handleDisconnect = () => setPublicAddress(null);
+
+  useEffect(() => {
+    async function start() {
+      const { isCorrectNetwork, account } = await connectMetamask();
+      if (!isCorrectNetwork) return setIsCorrectNetwork(false);
+      setIsCorrectNetwork(true);
+      setPublicAddress(account);
+      return setStartGame(false);
+    }
+    if (startGame) {
+      start();
+    }
+  }, [setIsCorrectNetwork, setPublicAddress, startGame]);
 
   return (
     <nav>
@@ -33,7 +48,7 @@ export default function Navbar(): ReactElement {
       )}
       {!isCorrectNetwork && <ChangeNetworkDiv />}
       {universalProfileJSON && (
-        <Button onClick={() => setUniversalProfileJSON(null)}>Log out</Button>
+        <Button onClick={() => setUniversalProfileJSON(null)}>Disconnect UP</Button>
       )}
     </nav>
   );

@@ -10,8 +10,8 @@ export interface Tile {
 
 const sideBoxA = 0.05;
 const sideBoxB = 0.05;
-const numberTilesInCol = 6;
-const numberCols = 11;
+const numberTilesInCol = 5;
+const numberCols = 14;
 const firstPointsOnMap = [
   [13, 52.7],
   [13, 52.75],

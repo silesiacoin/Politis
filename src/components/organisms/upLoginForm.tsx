@@ -6,7 +6,8 @@ import fetchUniversalProfile from '../../functions/fetchUniversalProfile';
 import Submit from '../atoms/submit';
 
 const UpLoginForm = (): ReactElement => {
-  const [upAddress, setUpAddress] = useState('');
+  const local = localStorage.getItem('UP');
+  const [upAddress, setUpAddress] = useState(local ? local : '');
   const [isValidAddress, setIsValidAddress] = useState(true);
 
   const { publicAddress, setUniversalProfileJSON } = useContext(Context);
@@ -26,6 +27,9 @@ const UpLoginForm = (): ReactElement => {
   return (
     <form className='form' onSubmit={handleSubmit}>
       <Label>
+        <p>
+          Your UP address must match your address (creator) in MetaMask.
+        </p>
         Universal Profile address:
         <InputString
           value={upAddress}
@@ -35,9 +39,9 @@ const UpLoginForm = (): ReactElement => {
       </Label>
       {!isValidAddress && <p>Provided invalid address</p>}
       {upAddress ? (
-        <Submit value='Log into your Universal Profile' />
+        <Submit value='Connect your Universal Profile' />
       ) : (
-        <Submit value='Log into your Universal Profile' disabled />
+        <Submit value='Connect your Universal Profile' disabled />
       )}
     </form>
   );
