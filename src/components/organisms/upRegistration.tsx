@@ -1,38 +1,77 @@
-import React, { Fragment, Dispatch, ReactElement, SetStateAction, useContext } from 'react';
-import { DEPLOYING } from '../../constants/status';
+import React, { Fragment, Dispatch, ReactElement, SetStateAction, useContext, useState, useEffect } from 'react';
+import { DeploymentEventBase, DeploymentEvent, DeploymentEventTransaction } from '@lukso/lsp-factory.js';
 import { Context } from '../../Context';
-import Button from '../atoms/button';
-import Loader from '../atoms/loader';
 import UpRegistrationForm from './upRegistrationForm';
+import Button from '../atoms/button';
+import ProgressBar from '../atoms/progressBar';
+import Container from '../atoms/container';
 
 interface Props {
   setShouldRenderRegistration: Dispatch<SetStateAction<boolean>>;
 }
+interface DeploymentEventWithFunctionName extends DeploymentEventBase {
+  functionName: string;
+}
 
 const UpRegistration = ({ setShouldRenderRegistration }: Props): ReactElement => {
-  const { universalProfileAddress } = useContext(Context);
+  const { universalProfileAddress, setUniversalProfileAddress } = useContext(Context);
+
+  const [eventCount, setEventCount] = useState(0);
+  const [latestEvent, setLatestEvent] = useState<DeploymentEvent | null>(null);
+  const [deploymentStatus, setDeploymentStatus] = useState('');
+  const [complete, setComplete] = useState(false);
+
+  useEffect(() => {
+    const latestEventWithFunctionName = latestEvent as DeploymentEventWithFunctionName;
+    const functionName = latestEventWithFunctionName?.functionName;
+    const contractName = latestEventWithFunctionName?.contractName;
+    setDeploymentStatus(
+      eventCount !== 0
+        ? functionName === 'setData'
+          ? `setting the data of the ${contractName}`
+          : functionName === 'transferOwnership'
+          ? `transferring the ownership of the ${contractName}`
+          : `initializing the ${contractName}`
+        : ''
+    );
+    if (complete && latestEvent && latestEvent.receipt) {
+      const address = latestEvent?.receipt.to;
+      setUniversalProfileAddress(address);
+    }
+  }, [complete, eventCount, latestEvent, setUniversalProfileAddress]);
+
+  const handleCancel = () => {
+    setShouldRenderRegistration(false);
+    setComplete(false);
+    setEventCount(0);
+  };
 
   return (
     <Fragment>
-      {universalProfileAddress === DEPLOYING ? (
+      {complete ? (
         <>
-          <div>
-            <Loader info={'Creating account'} />
-            <p>Your universal profile is currently being deployed. This may take a while. Wait until the process is over.</p>
-            <p>The process requires (8) approvals in metamask.</p>
-            <p>When the UP is created you will receive your address.</p>
-          </div>
-          <Button classes='button--margin' onClick={() => setShouldRenderRegistration(false)}>Cancel the creation process</Button>
+          <p>Your deployed universal profile address: {universalProfileAddress}</p>
+          <Button classes='button--margin' onClick={handleCancel}>
+            Next
+          </Button>
         </>
-      ) : !universalProfileAddress ? (
+      ) : eventCount ? (
         <>
-          <UpRegistrationForm />
-          <Button classes='button--margin' onClick={() => setShouldRenderRegistration(false)}>Cancel</Button>
+          <Container>
+            <p>Your universal profile is currently being deployed. This may take a while. Wait until the process is over.</p>
+            <p>Currently we are {deploymentStatus}</p>
+            <ProgressBar currentLength={eventCount} />
+          </Container>
+          <Button classes='button--margin' onClick={handleCancel}>
+            Cancel the creation process
+          </Button>
         </>
       ) : (
         <>
-          <p>Your deployed universal profile address: {universalProfileAddress}</p>
-          <Button classes='button--margin' onClick={() => setShouldRenderRegistration(false)}>Next</Button>
+          <UpRegistrationForm setEventCount={setEventCount} setLatestEvent={setLatestEvent} setComplete={setComplete} />
+          <Button classes='button--margin' onClick={handleCancel}>
+            Cancel
+          </Button>
         </>
       )}
     </Fragment>
