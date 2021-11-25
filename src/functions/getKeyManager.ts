@@ -6,7 +6,7 @@ interface Props {
     upAddress: string;
 }
 
-export default async function GetKeyManager({ upAddress }: Props): Promise<any> {
+export default async function GetKeyManager({ upAddress }: Props): Promise<any | Error> {
     const web3 = GetWeb3();
     const abi: any = UniversalProfileContract.abi;
     const managerAbi: any = KeyManagerContract.abi;

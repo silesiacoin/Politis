@@ -1,50 +1,87 @@
 import getCityContract from './getCityContract';
 import GetKeyManager from './getKeyManager';
 import GetWeb3 from './getWeb3';
+import UniversalProfileContract from '@lukso/universalprofile-smart-contracts/artifacts/UniversalProfile.json';
 
 interface Props {
-  currentPrice: string;
-  from: string;
-  gasPrice: number;
-  gas: number;
-  tileLocator: number | undefined;
-  upBuyerAddress: string;
+  currentPrice: number | null | undefined;
+  fromAddress: string | null;
+  gasPrice: string;
+  gas: string;
+  tileId: number | undefined;
+  upNewOwner: string;
+  upAddress: string | null;
 }
 
-export function buyTile({ currentPrice, from, gasPrice, gas, tileLocator, upBuyerAddress }: Props): void | Error {
-  // const web3 = GetWeb3();
+export async function buyTile({ currentPrice, fromAddress, gasPrice, gas, tileId, upNewOwner, upAddress }: Props): Promise<void | Error> {
+  const web3 = GetWeb3();
+  console.log('click');
 
   const keyManager = GetKeyManager({
-    upAddress: upBuyerAddress
+    upAddress: upNewOwner
   });
 
   const transactionObject = {
-    from: from,
+    from: fromAddress ? fromAddress : '',
     gas: gas,
     gasPrice: gasPrice,
-    value: currentPrice,
+    value: currentPrice ? currentPrice : '',
   };
 
   try {
+    const citiesContract = getCityContract();
+    const tileLocator = `0x${tileId}`;
+    const myAbi: any = UniversalProfileContract.abi;
 
-    // KET MANAGER EXECUTE
+    console.log('1');
 
-    //@ts-ignore
-    keyManager.methods.execute()
+    const myUniversalProfile = new web3.eth.Contract(myAbi, upAddress ? upAddress : '');
+
+    console.log('2');
+    console.log(myUniversalProfile);
+
+    const payload = citiesContract.methots.buyTile(tileLocator, upNewOwner).encodeABI();
+
+    console.log('3');
+    console.log(payload)
+    console.log(citiesContract.address)
 
 
+    // const execution = await myUniversalProfile.execute(0, citiesContract.address, currentPrice, payload)
+    // console.log(execution)
 
-    // OLD POLITIS BUY TILE FUNCTION
+    console.log('end');
 
     // web3.eth.estimateGas(transactionObject)
-    //   .then((gas: number) => {
-    //     const transactionObject = gas * 10;
-    //     const citiesContract = getCityContract();
-    //     citiesContract.methods.buyTile(tileLocator, upBuyerAddress).send(transactionObject, () => {
-    //       console.log('buy success')
-    //       return;
-    //     });
-    //   })
+    //   .then(async (newGas: number) => {
+    // const newTransactionObject = {
+    //   from: fromAddress ? fromAddress : '',
+    //   gas: newGas * 10,
+    //   gasPrice: gasPrice,
+    //   value: currentPrice ? currentPrice : '',
+    // };
+
+    // const citiesContract = getCityContract();
+    // const tileLocator = `0x${tileId}`;
+
+    // const payload = await citiesContract.methots.buyTile(tileLocator, upNewOwner).encodeABI();
+    // const execution = UniversalProfile.execute(0, citiesContract.address, amount, payload)
+
+    // citiesContract.methods.buyTile(tileLocator, upNewOwner).send(newTransactionObject, (error: any, result: any) => {
+    //   if (error) {
+    //     console.log('error');
+    //     console.log(error);
+    //   }
+    //   if (result) {
+    //     console.log('buy success');
+    //     console.log(result);
+    //   }
+    //   return;
+    // });
+
+
+
+    // })
   } catch {
     return new Error('Error fetching buy tile');
   }

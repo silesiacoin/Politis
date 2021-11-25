@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useEffect, useState } from 'react';
+import React, { FormEvent, Fragment, ReactElement, useContext, useEffect, useState } from 'react';
 import Map from 'ol/Map';
 import 'ol/ol.css';
 import * as turf from '@turf/turf';
@@ -13,16 +13,26 @@ import Modal from '../molecules/modal';
 import Button from '../atoms/button';
 import Loader from '../atoms/loader';
 import { buyTile } from '../../functions/buyTile';
+import { Context } from '../../Context';
+import Label from '../atoms/label';
+import InputString from '../atoms/inputString';
+import InputNumber from '../atoms/inputNumber';
+import Submit from '../atoms/submit';
 
 const berlinMapCor = [13.402, 52.51];
 const mapZoom = 11;
 
 export default function World(): ReactElement {
+  const { publicAddress, universalProfileAddress } = useContext(Context);
+
   const [startCreateMap, setStart] = useState<boolean>(true);
   const [selected, setSelected] = useState<null | Tile>(null);
   const [onMap, setOnMap] = useState(true);
   const [onModal, setOnModal] = useState(false);
   const [loadingOn, setLoadingOn] = useState(true);
+  const [gasPrice, setGasPrice] = useState('500000');
+  const [gas, setGas] = useState('0');
+  const [newOwner, setNewOwner] = useState(universalProfileAddress ? universalProfileAddress : '');
 
   function zoomMap(map: Map) {
     map.getView().setCenter(proj.transform(berlinMapCor, 'EPSG:4326', 'EPSG:3857'));
@@ -103,6 +113,20 @@ export default function World(): ReactElement {
     }
   }, [startCreateMap]);
 
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setOnModal(false);
+    buyTile({
+      fromAddress: publicAddress,
+      currentPrice: selected?.price,
+      gasPrice: gasPrice,
+      gas: gas,
+      tileId: selected?.id,
+      upNewOwner: newOwner,
+      upAddress: universalProfileAddress
+    });
+  };
+
   return (
     <Fragment>
       {loadingOn &&
@@ -111,18 +135,7 @@ export default function World(): ReactElement {
       <Button classes={'button button--refresh'} onClick={() => setOnMap(!onMap)}>
         Refresh map
       </Button>
-      <Modal
-        selected={selected}
-        isOn={onModal}
-        onFunction={() => setOnModal(!onModal)}
-        clickYes={() => buyTile({
-          from: '',
-          currentPrice: '',
-          gasPrice: 500000,
-          gas: 0,
-          tileLocator: selected?.id,
-          upBuyerAddress: ''
-        })}>
+      <Modal isOn={onModal}>
         <div className={'modal__panel__header'}>
           <h4>Do you want to buy a tile?</h4>
         </div>
@@ -143,6 +156,36 @@ export default function World(): ReactElement {
             {selected?.polygon[1][1]}
           </div>
         </div>
+        <form onSubmit={handleSubmit}>
+          <Label>
+            Gas:
+            <InputNumber
+              value={gas}
+              onChange={(event) => setGas((event.target as HTMLTextAreaElement).value)}
+              required
+            />
+          </Label>
+          <Label>
+            Gas price:
+            <InputNumber
+              value={gasPrice}
+              onChange={(event) => setGasPrice((event.target as HTMLTextAreaElement).value)}
+              required
+            />
+          </Label>
+          <Label>
+            New owner:
+            <InputString
+              value={newOwner}
+              onChange={(event) => setNewOwner((event.target as HTMLTextAreaElement).value)}
+              required
+            />
+          </Label>
+          <Submit value='Yes' />
+          <Button classes={'button--margin button--width'} onClick={() => setOnModal(false)}>
+            No
+          </Button>
+        </form>
       </Modal>
       {onMap && <div id={'map'} className={'map'}></div>}
     </Fragment>
