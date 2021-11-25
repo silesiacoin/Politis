@@ -62,9 +62,16 @@ export async function buyTile({ currentPrice, fromAddress, tileId, upNewOwner, u
     const { taskId } = response.data as any;
     console.log(taskId);
     const interval = setInterval(async () => {
-      const { status, data } = await axios.get(`https://relayer.lukso.network/api/v1/task/${taskId}`);
-      console.log(status, data);
-      if (status) clearInterval(interval);
+      await axios
+        .get(`https://relayer.lukso.network/api/v1/task/${taskId}`)
+        .then(({ status, data }) => {
+          console.log(status, data);
+          if (status) clearInterval(interval);
+        })
+        .catch((error) => {
+          console.error(error);
+          clearInterval(interval);
+        });
     }, 2000);
   } catch {
     return new Error('Error fetching buy tile');
