@@ -2,7 +2,7 @@ import React, { useState, useContext, FormEvent, ReactElement } from 'react';
 import { Context } from '../../Context';
 import Label from '../atoms/label';
 import InputString from '../atoms/inputString';
-import fetchUniversalProfile from '../../functions/fetchUniversalProfile';
+import fetchUniversalProfile from '../../utils/fetchUniversalProfile';
 import Submit from '../atoms/submit';
 
 const UpLoginForm = (): ReactElement => {

@@ -1,10 +1,10 @@
 import UniversalProfileContract from '@lukso/universalprofile-smart-contracts/artifacts/UniversalProfile.json';
 import axios from 'axios';
 import { contractAddress } from '../constants/chain';
-import getCityContract from './getCityContract';
-import GetKeyManager from './getKeyManager';
-import { getSigner } from './getSigner';
-import GetWeb3 from './getWeb3';
+import { getCityContract } from '../helpers/getCityContract';
+import { getKeyManager } from '../helpers/getKeyManager';
+import { getSigner } from '../helpers/getSigner';
+import { getWeb3 } from '../helpers/getWeb3';
 
 interface Props {
   currentPrice: number | null | undefined;
@@ -17,8 +17,8 @@ interface Props {
 }
 
 export async function buyTile({ currentPrice, fromAddress, tileId, upNewOwner, upAddress }: Props): Promise<void | Error> {
-  const web3 = GetWeb3();
-  const keyManager = await GetKeyManager({
+  const web3 = getWeb3();
+  const keyManager = await getKeyManager({
     upAddress: upNewOwner,
   });
 

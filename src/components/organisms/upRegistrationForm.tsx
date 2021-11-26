@@ -5,15 +5,15 @@ import React, {
   useContext,
 } from 'react';
 import { LSP3ProfileImage, LSP3ProfileLink } from '@lukso/lsp-factory.js';
-import { deployUP } from '../../functions/lspFactory';
+import { getSigner } from '../../helpers/getSigner';
+import { deployUP } from '../../utils/lspFactory';
+import { DEPLOYING } from '../../constants/status';
+import { Context } from '../../Context';
+import LinkList from '../molecules/linkList';
 import InputString from '../atoms/inputString';
 import Label from '../atoms/label';
 import Submit from '../atoms/submit';
 import Button from '../atoms/button';
-import LinkList from '../molecules/linkList';
-import { getSigner } from '../../functions/getSigner';
-import { Context } from '../../Context';
-import { DEPLOYING } from '../../constants/status';
 
 export default function UpRegistrationForm(): ReactElement {
   const { publicAddress, setUniversalProfileAddress } = useContext(Context);
