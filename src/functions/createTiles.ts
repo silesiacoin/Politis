@@ -51,7 +51,7 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
         id: arrayLength,
         owner: tileResponse?.owner,
         price: tileResponse?.currentPrice,
-        polygon: poly
+        polygon: poly,
       };
 
       allTiles[arrayLength] = turf.polygon([poly], info);

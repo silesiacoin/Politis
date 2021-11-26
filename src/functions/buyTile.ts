@@ -24,14 +24,16 @@ export async function buyTile({ currentPrice, fromAddress, tileId, upNewOwner, u
 
   try {
     const citiesContract = getCityContract();
-    const tileLocator = `0x${tileId}`;
+    const tileLocator = tileId;
     const myAbi: any = UniversalProfileContract.abi;
 
     const myUniversalProfile = new web3.eth.Contract(myAbi, upAddress ? upAddress : '');
 
+    console.log(citiesContract.methods.buyTile(tileLocator, upNewOwner));
+
     const citiesPayload = citiesContract.methods.buyTile(tileLocator, upNewOwner).encodeABI();
 
-    if (!currentPrice) return;
+    if (currentPrice === null || currentPrice === undefined) return;
     const abiPayload = await myUniversalProfile.methods
       .execute(0, contractAddress, web3.utils.toWei(currentPrice.toString()), citiesPayload)
       .encodeABI();
@@ -39,15 +41,13 @@ export async function buyTile({ currentPrice, fromAddress, tileId, upNewOwner, u
     const keyManagerAddress = await myUniversalProfile.methods.owner().call();
 
     // w doc jest tak:
-    const controllerAccount = web3.eth.accounts.privateKeyToAccount(fromAddress ? fromAddress : '');
-    const controllerAddress = controllerAccount.address;
-    const nonce = await keyManager.methods.getNonce(controllerAddress, 0).call();
+    // const controllerAccount = web3.eth.accounts.privateKeyToAccount(fromAddress ? fromAddress : '');
+    // const controllerAddress = controllerAccount.address;
+    // const nonce = await keyManager.methods.getNonce(controllerAddress, 0).call();
 
     // u nas jest tak:
     // fromAddress - adres publiczny z metamask
-    // const nonce = await keyManager.methods.getNonce(fromAddress, 0).call();
-
-    console.log(nonce)
+    const nonce = await keyManager.methods.getNonce(fromAddress, 0).call();
 
     const message = await web3.utils.soliditySha3(keyManagerAddress, nonce, {
       t: 'bytes',
@@ -106,8 +106,9 @@ export async function buyTile({ currentPrice, fromAddress, tileId, upNewOwner, u
         .get('https://relayer.lukso.network/api/v1/task/030eca49-8fd3-41cb-9577-3f2d80abc782')
         .then((response) => {
           const responseData: any = response.data;
-          console.log(responseData.success);
-          if (responseData.success) clearInterval(interval);
+          if (responseData.success && responseData.status === 'COMPLETE') {
+            clearInterval(interval);
+          }
         })
         .catch((error) => {
           console.error(error);

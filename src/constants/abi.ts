@@ -26,7 +26,7 @@ export const citiesAbi = [
         'inputs': [
             {
                 'internalType': 'uint256',
-                'name': '',
+                'name': 'index',
                 'type': 'uint256'
             }
         ],
