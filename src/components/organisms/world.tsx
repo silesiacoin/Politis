@@ -30,8 +30,8 @@ export default function World(): ReactElement {
   const [onMap, setOnMap] = useState(true);
   const [onModal, setOnModal] = useState(false);
   const [loadingOn, setLoadingOn] = useState(true);
-  const [gasPrice, setGasPrice] = useState('500000');
-  const [gas, setGas] = useState('0');
+  const [gasPrice, setGasPrice] = useState('1000000');
+  const [gas, setGas] = useState('500000');
   const [newOwner, setNewOwner] = useState(universalProfileAddress ? universalProfileAddress : '');
 
   function zoomMap(map: Map) {
