@@ -122,7 +122,6 @@ export default function World(): ReactElement {
       gasPrice: gasPrice,
       gasLimit: gas,
       tileId: selected?.id,
-      currentOwner: selected?.owner,
       upNewOwner: newOwner,
       upAddress: universalProfileAddress,
     });

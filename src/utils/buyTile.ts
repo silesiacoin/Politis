@@ -7,7 +7,6 @@ import { getWeb3 } from '../helpers/getWeb3';
 interface Props {
   currentPrice: number | null | undefined;
   fromAddress: string | null;
-  currentOwner: string | null | undefined;
   gasPrice: string;
   gasLimit: string;
   tileId: number | undefined;
@@ -18,7 +17,6 @@ interface Props {
 export async function buyTile({
   currentPrice,
   fromAddress,
-  currentOwner,
   gasPrice,
   gasLimit,
   tileId,
@@ -30,38 +28,33 @@ export async function buyTile({
   try {
     const citiesContract = getCityContract();
     const tileLocator = tileId;
-    const myAbi: any = UniversalProfileContract.abi;
-
-    const myUniversalProfile = new web3.eth.Contract(myAbi, upAddress ? upAddress : '');
-
-    console.log(citiesContract.methods.buyTile(tileLocator, upNewOwner));
+    // const upAbi: any = UniversalProfileContract.abi;
+    // const universalProfile = new web3.eth.Contract(upAbi, upAddress ? upAddress : '');
+    // const keyManagerAddress = await universalProfile.methods.owner().call();
 
     const citiesPayload = citiesContract.methods.buyTile(tileLocator, upNewOwner).encodeABI();
+    console.log(citiesPayload);
 
     if (currentPrice === null || currentPrice === undefined) return;
-
-    const abiPayload = await myUniversalProfile.methods
-      .execute(0, contractAddress, web3.utils.toWei(currentPrice.toString()), citiesPayload)
-      .encodeABI();
-
-    const signer = await getSigner();
-    console.log(signer);
-    if (!signer) return;
+    const price = web3.utils.toWei(currentPrice.toString());
 
     const payload = {
       from: fromAddress as string,
-      to: currentOwner as string,
-      gasPrice: '1000000',
+      to: contractAddress,
+      value: price,
+      gasPrice,
       gasLimit,
-      data: abiPayload,
+      data: citiesPayload,
     };
 
     // const response = await signer.sendTransaction(payload);
-    const response = await window.ethereum.request({
-      method: 'eth_sendTransaction',
-      params: [payload],
-    });
-    console.log(response);
+    window.ethereum
+      .request({
+        method: 'eth_sendTransaction',
+        params: [payload],
+      })
+      .then((hash: string) => console.log(hash))
+      .catch((error: any) => console.error(error));
   } catch {
     return new Error('Error fetching buy tile');
   }
