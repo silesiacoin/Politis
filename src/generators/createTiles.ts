@@ -1,5 +1,5 @@
 import * as turf from '@turf/turf';
-import getCityContract from './getCityContract';
+import { getCityContract } from '../helpers/getCityContract';
 
 export interface Tile {
   id: number;
@@ -16,7 +16,7 @@ const firstPointsOnMap = [
   [13, 52.7],
   [13, 52.75],
   [13.05, 52.75],
-  [13.05, 52.7]
+  [13.05, 52.7],
 ];
 
 export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.Polygon, Tile>[]> {
@@ -34,7 +34,7 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
         [firstPointsOnMap[1][0] + sideB, firstPointsOnMap[1][1] - sideA],
         [firstPointsOnMap[2][0] + sideB, firstPointsOnMap[2][1] - sideA],
         [firstPointsOnMap[3][0] + sideB, firstPointsOnMap[3][1] - sideA],
-        [firstPointsOnMap[0][0] + sideB, firstPointsOnMap[0][1] - sideA]
+        [firstPointsOnMap[0][0] + sideB, firstPointsOnMap[0][1] - sideA],
       ];
 
       let citiesContract;

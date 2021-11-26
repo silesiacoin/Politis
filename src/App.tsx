@@ -1,8 +1,8 @@
 import React, { useState, useEffect, ReactElement } from 'react';
+import { LSP3Profile } from '@lukso/lsp-factory.js';
 import { Context } from './Context';
 import './scss/main.scss';
 import Header from './components/organisms/header';
-import { LSP3Profile } from '@lukso/lsp-factory.js';
 import UpLogin from './components/organisms/upLogin';
 import Container from './components/atoms/container';
 import UpRegistration from './components/organisms/upRegistration';
