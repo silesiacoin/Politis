@@ -38,7 +38,16 @@ export async function buyTile({ currentPrice, fromAddress, tileId, upNewOwner, u
 
     const keyManagerAddress = await myUniversalProfile.methods.owner().call();
 
-    const nonce = await keyManager.methods.getNonce(fromAddress, 0).call();
+    // w doc jest tak:
+    const controllerAccount = web3.eth.accounts.privateKeyToAccount(fromAddress ? fromAddress : '');
+    const controllerAddress = controllerAccount.address;
+    const nonce = await keyManager.methods.getNonce(controllerAddress, 0).call();
+
+    // u nas jest tak:
+    // fromAddress - adres publiczny z metamask
+    // const nonce = await keyManager.methods.getNonce(fromAddress, 0).call();
+
+    console.log(nonce)
 
     const message = await web3.utils.soliditySha3(keyManagerAddress, nonce, {
       t: 'bytes',
@@ -59,22 +68,52 @@ export async function buyTile({ currentPrice, fromAddress, tileId, upNewOwner, u
       },
     };
 
-    const response = await axios.post('https://relayer.lukso.network/api/v1/execute', payload);
+    const optionAxios = {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        // 'Access-Control-Allow-Methods': 'POST',
+        // 'Access-Control-Allow-Headers': 'Content-Type',
+        // 'Content-Type': 'application/json',
+      },
+      // mode: 'cors',
+    };
+
+    const response = await axios.post('https://relayer.lukso.network/api/v1/execute', payload, optionAxios);
     console.log(response);
     const { taskId } = response.data as any;
     console.log(taskId);
-    // const interval = setInterval(async () => {
-    //   await axios
-    //     .get(`https://relayer.lukso.network/api/v1/task/${taskId}`)
-    //     .then(({ status, data }) => {
-    //       console.log(status, data);
-    //       if (status) clearInterval(interval);
-    //     })
-    //     .catch((error) => {
-    //       console.error(error);
-    //       clearInterval(interval);
-    //     });
-    // }, 2000);
+
+    // fetch('https://relayer.lukso.network/api/v1/execute', {
+    //   method: 'POST', // or 'PUT'
+    //   headers: {
+    //     'Access-Control-Allow-Origin': '*',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   mode: 'no-cors', // no-cors, *cors, same-origin
+    //   cache: 'no-cache',
+    //   body: JSON.stringify(payload),
+    // })
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     console.log('My Success:', data);
+    //   })
+    //   .catch((error) => {
+    //     console.error('My Error:', error);
+    //   });
+
+    const interval = setInterval(async () => {
+      await axios
+        .get('https://relayer.lukso.network/api/v1/task/030eca49-8fd3-41cb-9577-3f2d80abc782')
+        .then((response) => {
+          const responseData: any = response.data;
+          console.log(responseData.success);
+          if (responseData.success) clearInterval(interval);
+        })
+        .catch((error) => {
+          console.error(error);
+          clearInterval(interval);
+        });
+    }, 2000);
   } catch {
     return new Error('Error fetching buy tile');
   }
