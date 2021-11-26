@@ -1,5 +1,5 @@
 import React, { Fragment, Dispatch, ReactElement, SetStateAction, useContext, useState, useEffect } from 'react';
-import { DeploymentEventBase, DeploymentEvent, DeploymentEventTransaction } from '@lukso/lsp-factory.js';
+import { DeploymentEventBase, DeploymentEvent } from '@lukso/lsp-factory.js';
 import { Context } from '../../Context';
 import UpRegistrationForm from './upRegistrationForm';
 import Button from '../atoms/button';
@@ -30,13 +30,14 @@ const UpRegistration = ({ setShouldRenderRegistration }: Props): ReactElement =>
         ? functionName === 'setData'
           ? `setting the data of the ${contractName}`
           : functionName === 'transferOwnership'
-          ? `transferring the ownership of the ${contractName}`
-          : `initializing the ${contractName}`
+            ? `transferring the ownership of the ${contractName}`
+            : `initializing the ${contractName}`
         : ''
     );
     if (complete && latestEvent && latestEvent.receipt) {
       const address = latestEvent?.receipt.to;
       setUniversalProfileAddress(address);
+      localStorage.setItem('UP', address);
     }
   }, [complete, eventCount, latestEvent, setUniversalProfileAddress]);
 
