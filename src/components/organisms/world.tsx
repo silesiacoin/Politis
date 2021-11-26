@@ -30,8 +30,8 @@ export default function World(): ReactElement {
   const [onMap, setOnMap] = useState(true);
   const [onModal, setOnModal] = useState(false);
   const [loadingOn, setLoadingOn] = useState(true);
-  // const [gasPrice, setGasPrice] = useState('500000');
-  // const [gas, setGas] = useState('0');
+  const [gasPrice, setGasPrice] = useState('500000');
+  const [gas, setGas] = useState('0');
   const [newOwner, setNewOwner] = useState(universalProfileAddress ? universalProfileAddress : '');
 
   function zoomMap(map: Map) {
@@ -119,11 +119,12 @@ export default function World(): ReactElement {
     buyTile({
       fromAddress: publicAddress,
       currentPrice: selected?.price,
-      // gasPrice: gasPrice,
-      // gas: gas,
+      gasPrice: gasPrice,
+      gasLimit: gas,
       tileId: selected?.id,
+      currentOwner: selected?.owner,
       upNewOwner: newOwner,
-      upAddress: universalProfileAddress
+      upAddress: universalProfileAddress,
     });
   };
 
