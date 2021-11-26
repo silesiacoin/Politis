@@ -16,7 +16,7 @@ import { buyTile } from '../../functions/buyTile';
 import { Context } from '../../Context';
 import Label from '../atoms/label';
 import InputString from '../atoms/inputString';
-import InputNumber from '../atoms/inputNumber';
+// import InputNumber from '../atoms/inputNumber';
 import Submit from '../atoms/submit';
 
 const berlinMapCor = [13.402, 52.51];
@@ -30,8 +30,8 @@ export default function World(): ReactElement {
   const [onMap, setOnMap] = useState(true);
   const [onModal, setOnModal] = useState(false);
   const [loadingOn, setLoadingOn] = useState(true);
-  const [gasPrice, setGasPrice] = useState('500000');
-  const [gas, setGas] = useState('0');
+  // const [gasPrice, setGasPrice] = useState('500000');
+  // const [gas, setGas] = useState('0');
   const [newOwner, setNewOwner] = useState(universalProfileAddress ? universalProfileAddress : '');
 
   function zoomMap(map: Map) {
@@ -119,8 +119,8 @@ export default function World(): ReactElement {
     buyTile({
       fromAddress: publicAddress,
       currentPrice: selected?.price,
-      gasPrice: gasPrice,
-      gas: gas,
+      // gasPrice: gasPrice,
+      // gas: gas,
       tileId: selected?.id,
       upNewOwner: newOwner,
       upAddress: universalProfileAddress
@@ -157,7 +157,7 @@ export default function World(): ReactElement {
           </div>
         </div>
         <form onSubmit={handleSubmit}>
-          <Label>
+          {/* <Label>
             Gas:
             <InputNumber
               value={gas}
@@ -172,7 +172,7 @@ export default function World(): ReactElement {
               onChange={(event) => setGasPrice((event.target as HTMLTextAreaElement).value)}
               required
             />
-          </Label>
+          </Label> */}
           <Label>
             New owner:
             <InputString

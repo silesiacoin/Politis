@@ -9,8 +9,8 @@ import GetWeb3 from './getWeb3';
 interface Props {
   currentPrice: number | null | undefined;
   fromAddress: string | null;
-  gasPrice: string;
-  gas: string;
+  // gasPrice: string;
+  // gas: string;
   tileId: number | undefined;
   upNewOwner: string;
   upAddress: string | null;
@@ -18,8 +18,6 @@ interface Props {
 
 export async function buyTile({ currentPrice, fromAddress, tileId, upNewOwner, upAddress }: Props): Promise<void | Error> {
   const web3 = GetWeb3();
-  console.log('click');
-
   const keyManager = await GetKeyManager({
     upAddress: upNewOwner,
   });
@@ -37,14 +35,18 @@ export async function buyTile({ currentPrice, fromAddress, tileId, upNewOwner, u
     const abiPayload = await myUniversalProfile.methods
       .execute(0, contractAddress, web3.utils.toWei(currentPrice.toString()), citiesPayload)
       .encodeABI();
+
     const keyManagerAddress = await myUniversalProfile.methods.owner().call();
+
     const nonce = await keyManager.methods.getNonce(fromAddress, 0).call();
+
     const message = await web3.utils.soliditySha3(keyManagerAddress, nonce, {
       t: 'bytes',
       v: abiPayload,
     });
 
     const signer = await getSigner();
+
     if (!signer || !message) return;
     const signature = await signer.signMessage(message);
 
@@ -61,18 +63,18 @@ export async function buyTile({ currentPrice, fromAddress, tileId, upNewOwner, u
     console.log(response);
     const { taskId } = response.data as any;
     console.log(taskId);
-    const interval = setInterval(async () => {
-      await axios
-        .get(`https://relayer.lukso.network/api/v1/task/${taskId}`)
-        .then(({ status, data }) => {
-          console.log(status, data);
-          if (status) clearInterval(interval);
-        })
-        .catch((error) => {
-          console.error(error);
-          clearInterval(interval);
-        });
-    }, 2000);
+    // const interval = setInterval(async () => {
+    //   await axios
+    //     .get(`https://relayer.lukso.network/api/v1/task/${taskId}`)
+    //     .then(({ status, data }) => {
+    //       console.log(status, data);
+    //       if (status) clearInterval(interval);
+    //     })
+    //     .catch((error) => {
+    //       console.error(error);
+    //       clearInterval(interval);
+    //     });
+    // }, 2000);
   } catch {
     return new Error('Error fetching buy tile');
   }
