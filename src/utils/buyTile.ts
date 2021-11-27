@@ -1,60 +1,31 @@
-import { AbiItem } from 'web3-utils';
-import { contractAddress } from '../constants/chain';
-import { citiesAbi } from '../constants/abi';
 import { getCityContract } from '../helpers/getCityContract';
 import { getWeb3 } from '../helpers/getWeb3';
 
-interface Props {
-  currentPrice: number | null | undefined;
-  fromAddress: string | null;
-  gasPrice: string;
-  gasLimit: string;
-  tileId: number | undefined;
-  upNewOwner: string;
-  upAddress: string | null;
-}
-
-export async function buyTile({
-  currentPrice,
-  fromAddress,
-  gasPrice,
-  gasLimit,
-  tileId,
-  upNewOwner,
-}: Props): Promise<void | Error> {
+export async function buyTile(
+  metamaskAddress: string,
+  currentPrice: number,
+  tileId: number,
+  upNewOwner: string
+): Promise<void | Error> {
   const web3 = getWeb3();
-
+  const citiesContract = getCityContract();
+  const { toWei } = web3.utils;
   try {
-    const citiesContract = getCityContract();
-    const tileLocator = tileId;
-    const buyTileAbi = citiesAbi[1] as AbiItem;
-    const citiesPayload = await web3.eth.abi.encodeFunctionCall(
-      buyTileAbi,
-      citiesContract.methods.buyTile(tileLocator, upNewOwner)
-    );
-    // citiesContract.methods.buyTile(tileLocator, upNewOwner);
-
-    console.log(citiesPayload);
-    if (currentPrice === null || currentPrice === undefined) return;
-    const price = web3.utils.toWei(currentPrice.toString());
-
-    console.log(price, gasPrice, gasLimit);
-
-    const payload = {
-      from: fromAddress as string,
-      to: contractAddress,
-      value: price,
+    const gasPrice = '0x09184e72a000';
+    const gas = '0x6270';
+    const price = `0x${toWei(currentPrice.toString())}`;
+    const transaction = {
+      from: metamaskAddress,
       gasPrice,
-      gas: gasLimit,
-      data: citiesPayload,
+      gas,
+      value: price,
     };
 
-    // const response = await signer.sendTransaction(payload);
-    const response = await window.ethereum.request({
-      method: 'eth_sendTransaction',
-      params: [payload],
-    });
-    console.log(response);
+    citiesContract.methods
+      .buyTile(tileId, upNewOwner)
+      .send(transaction)
+      .then((res: any) => console.log(res))
+      .catch((err: Error) => console.error(err));
   } catch {
     return new Error('Error fetching buy tile');
   }
