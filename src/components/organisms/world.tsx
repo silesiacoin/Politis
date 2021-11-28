@@ -229,7 +229,7 @@ export default function World(): ReactElement {
               ) : (
                 <>
                   <h4>Owner:</h4>
-                  <h5>Admin account</h5>
+                  <h5>none</h5>
                 </>
               )}
             </div>
@@ -237,7 +237,7 @@ export default function World(): ReactElement {
               <div className={'modal__panel__body__info'}>
                 <h5> id: {selected?.id}</h5>
                 <h5>polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[1][0].toFixed(2)} {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)}</h5>
-                <br/>
+                <br />
                 <h4>value: {selected?.price && (selected.price / (10 ** 18))} LUKSO</h4>
                 <h4>price: {selected?.price && (2 * (selected.price / (10 ** 18)))} LUKSO</h4>
               </div>
