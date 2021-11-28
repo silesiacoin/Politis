@@ -130,38 +130,22 @@ export default function World(): ReactElement {
         </div>
         <div className={'modal__panel__header'}>
           <h5>
-            After purchase, the value of the tile will be doubled. When someone buys the tile from you, you will get its
-            value. The commission is charged on the purchase.
+            After purchase, the value of the tile will be doubled. When someone buys the tile from you, you wll get double the value back. The commission is charged on the purchase.
           </h5>
         </div>
         <div className={'modal__panel__body'}>
           <div className={'modal__panel__body__info'}>
             id: {selected?.id}
             <br />
-            owner: {selected?.owner}
+            polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[1][0].toFixed(2)} {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)}
             <br />
-            price: {selected?.price && (selected.price / (10 ** 18))}
             <br />
-            polygon: {selected?.polygon[0][0]} {selected?.polygon[1][0]} {selected?.polygon[0][1]} {selected?.polygon[1][1]}
+            value: {selected?.price && (selected.price / (10 ** 18))} LUKSO
+            <br />
+            price: {selected?.price && (2 * (selected.price / (10 ** 18)))} LUKSO
           </div>
         </div>
         <form onSubmit={handleSubmit}>
-          {/* <Label>
-            Gas:
-            <InputNumber
-              value={gas}
-              onChange={(event) => setGas((event.target as HTMLTextAreaElement).value)}
-              required
-            />
-          </Label>
-          <Label>
-            Gas price:
-            <InputNumber
-              value={gasPrice}
-              onChange={(event) => setGasPrice((event.target as HTMLTextAreaElement).value)}
-              required
-            />
-          </Label> */}
           <Label>
             New owner:
             <InputString

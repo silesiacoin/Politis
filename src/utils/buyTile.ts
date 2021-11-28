@@ -1,3 +1,4 @@
+import { gas, gasPrice } from '../constants/chain';
 import { getCityContract } from '../helpers/getCityContract';
 import { getWeb3 } from '../helpers/getWeb3';
 
@@ -11,9 +12,7 @@ export async function buyTile(
   const web3 = getWeb3();
   const { estimateGas } = web3.eth;
   try {
-    const gasPrice = '9382748132';
-    const gas = '100000000';
-    const price = `${currentPrice * 2}`;
+    const price = `${currentPrice * 2 + 0.2}`;
     const transaction = {
       from: metamaskAddress,
       gasPrice,

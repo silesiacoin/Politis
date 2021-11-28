@@ -19,6 +19,8 @@ const firstPointsOnMap = [
   [13.05, 52.7],
 ];
 
+const minimalPrice = 170000000000000000;
+
 export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.Polygon, Tile>[]> {
   let sideA = sideBoxA;
   let sideB = sideBoxB;
@@ -50,7 +52,7 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
       const info: Tile = {
         id: arrayLength,
         owner: tileResponse?.owner,
-        price: tileResponse.currentPrice > 0 ? tileResponse.currentPrice : 170000000000000000,
+        price: tileResponse.currentPrice > 0 ? tileResponse.currentPrice : minimalPrice,
         polygon: poly,
       };
 
