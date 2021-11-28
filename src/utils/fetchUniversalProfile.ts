@@ -1,5 +1,5 @@
 import { LSP3Profile, LSP3ProfileJSON } from '@lukso/lsp-factory.js';
-import getERC725Instance from './getERC725Instance';
+import getERC725Instance from '../helpers/getERC725Instance';
 
 export default async function fetchUniversalProfile(
   address: string,

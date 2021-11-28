@@ -2,15 +2,15 @@ import React, { useState, useContext, FormEvent, ReactElement } from 'react';
 import { Context } from '../../Context';
 import Label from '../atoms/label';
 import InputString from '../atoms/inputString';
-import fetchUniversalProfile from '../../functions/fetchUniversalProfile';
+import fetchUniversalProfile from '../../utils/fetchUniversalProfile';
 import Submit from '../atoms/submit';
 
 const UpLoginForm = (): ReactElement => {
   const local = localStorage.getItem('UP');
-  const [upAddress, setUpAddress] = useState(local ? local : '');
+  const [upAddress, setUpAddress] = useState<string>(local ? local : '');
   const [isValidAddress, setIsValidAddress] = useState(true);
 
-  const { publicAddress, setUniversalProfileJSON } = useContext(Context);
+  const { publicAddress, setUniversalProfileJSON, setUniversalProfileAddress } = useContext(Context);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,6 +20,7 @@ const UpLoginForm = (): ReactElement => {
       setIsValidAddress(false);
     } else {
       setIsValidAddress(true);
+      setUniversalProfileAddress(upAddress);
       setUniversalProfileJSON(fetchUPResponse);
     }
   };

@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useEffect, useState } from 'react';
+import React, { FormEvent, Fragment, ReactElement, useContext, useEffect, useState } from 'react';
 import Map from 'ol/Map';
 import 'ol/ol.css';
 import * as turf from '@turf/turf';
@@ -7,21 +7,35 @@ import Text from 'ol/style/Text';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import * as proj from 'ol/proj';
-import { createTiles, Tile } from '../../functions/createTiles';
-import { createMap } from '../../functions/createMap';
+import { createTiles, Tile } from '../../generators/createTiles';
+import { createMap } from '../../generators/createMap';
 import Modal from '../molecules/modal';
 import Button from '../atoms/button';
 import Loader from '../atoms/loader';
+import { buyTile } from '../../utils/buyTile';
+import { Context } from '../../Context';
+import Label from '../atoms/label';
+import InputString from '../atoms/inputString';
+import Submit from '../atoms/submit';
+import getERC725InstanceForOwners from '../../helpers/getERC725InstanceForOwners';
+import { LSP3Profile, LSP3ProfileJSON } from '@lukso/lsp-factory.js';
 
 const berlinMapCor = [13.402, 52.51];
 const mapZoom = 11;
 
 export default function World(): ReactElement {
+  const { publicAddress, universalProfileAddress } = useContext(Context);
+
   const [startCreateMap, setStart] = useState<boolean>(true);
   const [selected, setSelected] = useState<null | Tile>(null);
   const [onMap, setOnMap] = useState(true);
   const [onModal, setOnModal] = useState(false);
   const [loadingOn, setLoadingOn] = useState(true);
+  const [transactionLoadingOn, setTransactionLoadingOn] = useState(false);
+  const [newOwner, setNewOwner] = useState(universalProfileAddress ? universalProfileAddress : '');
+  const [selectedUP, setSelectedUP] = useState<null | LSP3Profile>(null);
+  const [successOn, setSuccessOn] = useState(false);
+  const [error, setError] = useState<null | Error>(null);
 
   function zoomMap(map: Map) {
     map.getView().setCenter(proj.transform(berlinMapCor, 'EPSG:4326', 'EPSG:3857'));
@@ -34,6 +48,24 @@ export default function World(): ReactElement {
     setSelected(tile);
     setOnModal(true);
   }
+
+  async function getUsersData(UPaddress: string | null | undefined) {
+    if (UPaddress && UPaddress !== '0x0000000000000000000000000000000000000000') {
+      await setSelectedUP(null);
+      const erc725 = getERC725InstanceForOwners(UPaddress);
+      const fetchProfile = await erc725.fetchData('LSP3Profile');
+      const profileJSON = fetchProfile['LSP3Profile'] as LSP3ProfileJSON;
+      setSelectedUP(profileJSON.LSP3Profile);
+    } else {
+      setSelectedUP(null);
+    }
+  }
+
+  useEffect(() => {
+    if (onModal) {
+      getUsersData(selected?.owner);
+    }
+  }, [onModal, selected?.owner]);
 
   useEffect(() => {
     if (!startCreateMap && !onMap) {
@@ -102,41 +134,130 @@ export default function World(): ReactElement {
     }
   }, [startCreateMap]);
 
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setTransactionLoadingOn(true);
+    setOnModal(true);
+    if (selected?.owner !== universalProfileAddress) {
+      if (!publicAddress || !selected?.price || !selected?.id || !newOwner) return;
+      const response = await buyTile(publicAddress, selected?.price, selected?.id, newOwner);
+
+      if (response === true) {
+        setSuccessOn(true);
+        setError(null);
+      } else {
+        setError(response ? response : null);
+        setSuccessOn(false);
+      }
+    } else {
+      setSuccessOn(false);
+      setError(new Error('You cannot buy your own tile'));
+    }
+    setTransactionLoadingOn(true);
+    setOnModal(true);
+  };
+
   return (
     <Fragment>
-      {loadingOn &&
-        <Loader info={'Creating a map'} />
-      }
-      <Button classes={'button button--refresh'} onClick={() => setOnMap(!onMap)}>
+      {loadingOn && <Loader classes='loader--absolute' info={'Creating a map'} />}
+      <Button classes={'button button--refresh'} onClick={() => setOnMap(false)}>
         Refresh map
       </Button>
-      <Modal
-        selected={selected}
-        isOn={onModal}
-        onFunction={() => setOnModal(!onModal)}
-        clickYes={() => {
-          //
-        }}>
-        <div className={'modal__panel__header'}>
-          <h4>Do you want to buy a tile?</h4>
-        </div>
-        <div className={'modal__panel__header'}>
-          <h5>
-            After purchase, the value of the tile will be doubled. When someone buys the tile from you, you will get its value. The commission is charged on the purchase.
-          </h5>
-        </div>
-        <div className={'modal__panel__body'}>
-          <div className={'modal__panel__body__info'}>
-            id: {selected?.id}
-            <br />
-            owner: {selected?.owner}
-            <br />
-            price: {selected?.price}
-            <br />
-            polygon: {selected?.polygon[0][0]} {selected?.polygon[1][0]} {selected?.polygon[0][1]}{' '}
-            {selected?.polygon[1][1]}
-          </div>
-        </div>
+      <Modal isOn={onModal}>
+        {transactionLoadingOn ? (
+          <>
+            {!successOn && !error ? (
+              <>
+                <Loader info={'Transaction in progress'} />
+                <Button classes={'button--margin button--width'} onClick={() => {
+                  setOnModal(false);
+                  setTransactionLoadingOn(false);
+                }}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <>
+                {successOn &&
+                  <>
+                    <div style={{ color: 'green' }}>
+                      Success
+                    </div>
+                    <Button classes={'button--margin button--width'} onClick={() => {
+                      setOnModal(false);
+                      setTransactionLoadingOn(false);
+                      setOnMap(false);
+                      setSuccessOn(false);
+                      setError(null);
+                    }}>
+                      Refresh map
+                    </Button>
+                  </>
+                }
+                {error &&
+                  <>
+                    <div style={{ color: 'red' }}>
+                      {error.toString()}
+                    </div>
+                    <Button classes={'button--margin button--width'} onClick={() => {
+                      setOnModal(false);
+                      setTransactionLoadingOn(false);
+                      setError(null);
+                      setSuccessOn(false);
+                    }}>
+                      Cancel
+                    </Button>
+                  </>
+                }
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <div className={'modal__panel__header'}>
+              <h4>Do you want to buy a tile?</h4>
+              <h5>
+                After the purchase, the value and price of the tile will be doubled. When someone buys a tile from you, you will get increased value. The commission is charged on the purchase.
+              </h5>
+              <br />
+              {selected?.owner !== '0x0000000000000000000000000000000000000000' ? (
+                <>
+                  <h4>Owner:</h4>
+                  <h4>{selectedUP?.name}</h4>
+                  <h5>{selectedUP?.description}</h5>
+                </>
+              ) : (
+                <>
+                  <h4>Owner:</h4>
+                  <h5>none</h5>
+                </>
+              )}
+            </div>
+            <div className={'modal__panel__body'}>
+              <div className={'modal__panel__body__info'}>
+                <h5> id: {selected?.id}</h5>
+                <h5>polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[1][0].toFixed(2)} {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)}</h5>
+                <br />
+                <h4>value: {selected?.price && (selected.price / (10 ** 18))} LUKSO</h4>
+                <h4>price: {selected?.price && (2 * (selected.price / (10 ** 18)))} LUKSO</h4>
+              </div>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <Label>
+                New owner:
+                <InputString
+                  value={newOwner}
+                  onChange={(event) => setNewOwner((event.target as HTMLTextAreaElement).value)}
+                  required
+                />
+              </Label>
+              <Submit value='Yes' />
+              <Button classes={'button--margin button--width'} onClick={() => setOnModal(false)}>
+                No
+              </Button>
+            </form>
+          </>
+        )}
       </Modal>
       {onMap && <div id={'map'} className={'map'}></div>}
     </Fragment>

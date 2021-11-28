@@ -1,13 +1,20 @@
-import React, { useState, Dispatch, ReactElement, SetStateAction, FormEvent, useContext } from 'react';
-import { LSP3ProfileImage, LSP3ProfileLink, DeploymentEvent } from '@lukso/lsp-factory.js';
-import { Context } from '../../Context';
-import { getSigner } from '../../functions/getSigner';
-import { deployUniversalProfile } from '../../functions/deployUniversalProfile';
+import React, {
+  useState,
+  ReactElement,
+  FormEvent,
+  useContext,
+  Dispatch,
+  SetStateAction,
+} from 'react';
+import { DeploymentEvent, LSP3ProfileImage, LSP3ProfileLink } from '@lukso/lsp-factory.js';
+import { getSigner } from '../../helpers/getSigner';
 import LinkList from '../molecules/linkList';
 import InputString from '../atoms/inputString';
 import Label from '../atoms/label';
 import Submit from '../atoms/submit';
 import Button from '../atoms/button';
+import { Context } from '../../Context';
+import { deployUniversalProfile } from '../../utils/deployUniversalProfile';
 
 interface Props {
   setEventCount: Dispatch<SetStateAction<number>>;

@@ -1,6 +1,5 @@
 import * as turf from '@turf/turf';
-import Web3 from 'web3';
-import { citiesAbi } from '../constants/abi';
+import { getCityContract } from '../helpers/getCityContract';
 
 export interface Tile {
   id: number;
@@ -17,17 +16,15 @@ const firstPointsOnMap = [
   [13, 52.7],
   [13, 52.75],
   [13.05, 52.75],
-  [13.05, 52.7]
+  [13.05, 52.7],
 ];
 
-const contractAddress = '0xD38CfFCe6B3eFbB87C33Fc75aBA0df351fd1B5e3';
+const minimalPrice = 170000000000000000;
 
 export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.Polygon, Tile>[]> {
   let sideA = sideBoxA;
   let sideB = sideBoxB;
   let arrayLength = 0;
-  const web3 = new Web3(window.ethereum);
-  const myAbi: any = citiesAbi;
 
   const allTiles = [];
   for (let i = 0; i < numberCols; i++) {
@@ -39,14 +36,14 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
         [firstPointsOnMap[1][0] + sideB, firstPointsOnMap[1][1] - sideA],
         [firstPointsOnMap[2][0] + sideB, firstPointsOnMap[2][1] - sideA],
         [firstPointsOnMap[3][0] + sideB, firstPointsOnMap[3][1] - sideA],
-        [firstPointsOnMap[0][0] + sideB, firstPointsOnMap[0][1] - sideA]
+        [firstPointsOnMap[0][0] + sideB, firstPointsOnMap[0][1] - sideA],
       ];
 
       let citiesContract;
       let tileResponse;
 
       try {
-        citiesContract = new web3.eth.Contract(myAbi, contractAddress);
+        citiesContract = getCityContract();
         tileResponse = await citiesContract.methods.tiles(arrayLength).call();
       } catch {
         new Error('Error fetching tile data');
@@ -55,8 +52,8 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
       const info: Tile = {
         id: arrayLength,
         owner: tileResponse?.owner,
-        price: tileResponse?.currentPrice,
-        polygon: poly
+        price: tileResponse.currentPrice > 0 ? tileResponse.currentPrice : minimalPrice,
+        polygon: poly,
       };
 
       allTiles[arrayLength] = turf.polygon([poly], info);
