@@ -120,9 +120,7 @@ export default function World(): ReactElement {
 
   return (
     <Fragment>
-      {loadingOn &&
-        <Loader info={'Creating a map'} />
-      }
+      {loadingOn && <Loader info={'Creating a map'} />}
       <Button classes={'button button--refresh'} onClick={() => setOnMap(!onMap)}>
         Refresh map
       </Button>
@@ -132,7 +130,8 @@ export default function World(): ReactElement {
         </div>
         <div className={'modal__panel__header'}>
           <h5>
-            After purchase, the value of the tile will be doubled. When someone buys the tile from you, you will get its value. The commission is charged on the purchase.
+            After purchase, the value of the tile will be doubled. When someone buys the tile from you, you will get its
+            value. The commission is charged on the purchase.
           </h5>
         </div>
         <div className={'modal__panel__body'}>
@@ -141,10 +140,9 @@ export default function World(): ReactElement {
             <br />
             owner: {selected?.owner}
             <br />
-            price: {selected?.price}
+            price: {selected?.price && (selected.price / (10 ** 18))}
             <br />
-            polygon: {selected?.polygon[0][0]} {selected?.polygon[1][0]} {selected?.polygon[0][1]}{' '}
-            {selected?.polygon[1][1]}
+            polygon: {selected?.polygon[0][0]} {selected?.polygon[1][0]} {selected?.polygon[0][1]} {selected?.polygon[1][1]}
           </div>
         </div>
         <form onSubmit={handleSubmit}>

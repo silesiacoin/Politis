@@ -7,13 +7,13 @@ export async function buyTile(
   tileId: number,
   upNewOwner: string
 ): Promise<void | Error> {
-  const web3 = getWeb3();
   const citiesContract = getCityContract();
-  const { toWei } = web3.utils;
+  const web3 = getWeb3();
+  const { estimateGas } = web3.eth;
   try {
-    const gasPrice = '0x09184e72a000';
-    const gas = '0x6270';
-    const price = `0x${toWei(currentPrice.toString())}`;
+    const gasPrice = '9382748132';
+    const gas = '100000000';
+    const price = `${currentPrice * 2}`;
     const transaction = {
       from: metamaskAddress,
       gasPrice,
@@ -21,11 +21,17 @@ export async function buyTile(
       value: price,
     };
 
-    citiesContract.methods
-      .buyTile(tileId, upNewOwner)
-      .send(transaction)
-      .then((res: any) => console.log(res))
-      .catch((err: Error) => console.error(err));
+    estimateGas(transaction)
+      .then(async (newGas: number) => {
+        transaction.gas = `${newGas * 10}`;
+
+        citiesContract.methods
+          .buyTile(tileId, upNewOwner)
+          .send(transaction)
+          .then((res: any) => console.log(res))
+          .catch((err: Error) => console.error(err));
+      })
+      .catch((err) => console.error(err));
   } catch {
     return new Error('Error fetching buy tile');
   }

@@ -50,7 +50,7 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
       const info: Tile = {
         id: arrayLength,
         owner: tileResponse?.owner,
-        price: tileResponse?.currentPrice,
+        price: 170000000000000000,
         polygon: poly,
       };
 
