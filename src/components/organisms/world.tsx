@@ -250,14 +250,15 @@ export default function World(): ReactElement {
               </div>
             </div>
             <form onSubmit={handleSubmit}>
-              <Label>
+              {/* // This is only for NEW politis contract - WITH UP */}
+              {/* <Label>
                 New owner:
                 <InputString
                   value={newOwner}
                   onChange={(event) => setNewOwner((event.target as HTMLTextAreaElement).value)}
                   required
                 />
-              </Label>
+              </Label> */}
               <Submit value='Yes' />
               <Button classes={'button--margin button--width'} onClick={() => setOnModal(false)}>
                 No
