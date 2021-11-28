@@ -7,7 +7,7 @@ export async function buyTile(
   currentPrice: number,
   tileId: number,
   upNewOwner: string
-): Promise<void | Error> {
+): Promise<boolean | Error> {
   const citiesContract = getCityContract();
   const web3 = getWeb3();
   const { estimateGas } = web3.eth;
@@ -20,18 +20,15 @@ export async function buyTile(
       value: price,
     };
 
-    estimateGas(transaction)
-      .then(async (newGas: number) => {
-        transaction.gas = `${newGas * 10}`;
+    const newGas = await estimateGas(transaction);
+    transaction.gas = `${newGas * 10}`;
 
-        citiesContract.methods
-          .buyTile(tileId, upNewOwner)
-          .send(transaction)
-          .then((res: any) => console.log(res))
-          .catch((err: Error) => console.error(err));
-      })
-      .catch((err) => console.error(err));
+    const response = await citiesContract.methods
+      .buyTile(tileId, upNewOwner)
+      .send(transaction)
+
+    return response?.status ? response?.status : new Error('MetaMask');
   } catch {
-    return new Error('Error fetching buy tile');
+    return new Error('MetaMask');
   }
 }
