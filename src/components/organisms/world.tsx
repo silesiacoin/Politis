@@ -235,14 +235,11 @@ export default function World(): ReactElement {
             </div>
             <div className={'modal__panel__body'}>
               <div className={'modal__panel__body__info'}>
-                id: {selected?.id}
-                <br />
-                polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[1][0].toFixed(2)} {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)}
-                <br />
-                <br />
-                value: {selected?.price && (selected.price / (10 ** 18))} LUKSO
-                <br />
-                price: {selected?.price && (2 * (selected.price / (10 ** 18)))} LUKSO
+                <h5> id: {selected?.id}</h5>
+                <h5>polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[1][0].toFixed(2)} {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)}</h5>
+                <br/>
+                <h4>value: {selected?.price && (selected.price / (10 ** 18))} LUKSO</h4>
+                <h4>price: {selected?.price && (2 * (selected.price / (10 ** 18)))} LUKSO</h4>
               </div>
             </div>
             <form onSubmit={handleSubmit}>
