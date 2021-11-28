@@ -24,7 +24,10 @@ export async function buyTile(
     transaction.gas = `${newGas * 10}`;
 
     const response = await citiesContract.methods
-      .buyTile(tileId, upNewOwner)
+      // This is only for NEW politis contract - WITH UP
+      // .buyTile(tileId, upNewOwner)
+      // This is only for OLD politis contract - NOT UP
+      .buyTile(tileId)
       .send(transaction)
 
     return response?.status ? response?.status : new Error('MetaMask');

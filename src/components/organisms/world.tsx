@@ -63,7 +63,8 @@ export default function World(): ReactElement {
 
   useEffect(() => {
     if (onModal) {
-      getUsersData(selected?.owner);
+      // This is only for NEW politis contract - WITH UP
+      // getUsersData(selected?.owner);
     }
   }, [onModal, selected?.owner]);
 
@@ -138,7 +139,10 @@ export default function World(): ReactElement {
     event.preventDefault();
     setTransactionLoadingOn(true);
     setOnModal(true);
-    if (selected?.owner !== universalProfileAddress) {
+    // This "if" is only for NEW politis contract - WITH UP
+    // if (selected?.owner !== universalProfileAddress) {
+    // This "if" is only for OLD politis contract - NOT UP
+    if (publicAddress && selected?.owner && selected?.owner.toLowerCase() !== publicAddress.toLowerCase()) {
       if (!publicAddress || !selected?.price || !selected?.id || !newOwner) return;
       const response = await buyTile(publicAddress, selected?.price, selected?.id, newOwner);
 
@@ -223,6 +227,9 @@ export default function World(): ReactElement {
               {selected?.owner !== '0x0000000000000000000000000000000000000000' ? (
                 <>
                   <h4>Owner:</h4>
+                  {!selectedUP?.name &&
+                    <h5>{selected?.owner}</h5>
+                  }
                   <h4>{selectedUP?.name}</h4>
                   <h5>{selectedUP?.description}</h5>
                 </>
