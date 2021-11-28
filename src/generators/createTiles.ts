@@ -47,10 +47,18 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
         new Error('Error fetching tile data');
       }
 
+      const minimalPrice = 0.17;
+      let myPrice = minimalPrice;
+      const r: number = tileResponse?.currentPrice;
+      if (r > 0) {
+        myPrice = tileResponse?.currentPrice
+        console.log(myPrice)
+      }
+
       const info: Tile = {
         id: arrayLength,
         owner: tileResponse?.owner,
-        price: tileResponse?.currentPrice,
+        price: myPrice,
         polygon: poly,
       };
 
