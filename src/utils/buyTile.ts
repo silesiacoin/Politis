@@ -5,14 +5,13 @@ import { getWeb3 } from '../helpers/getWeb3';
 export async function buyTile(
   metamaskAddress: string,
   currentPrice: number,
-  tileId: number,
-  upNewOwner: string
+  tileId: number
 ): Promise<boolean | Error> {
   const citiesContract = getCityContract();
   const web3 = getWeb3();
   const { estimateGas } = web3.eth;
   try {
-    const price = `${currentPrice * 2 + 0.2}`;
+    const price = `${currentPrice * 2}`;
     const transaction = {
       from: metamaskAddress,
       gasPrice,
@@ -24,9 +23,6 @@ export async function buyTile(
     transaction.gas = `${newGas * 10}`;
 
     const response = await citiesContract.methods
-      // This is only for NEW politis contract - WITH UP
-      // .buyTile(tileId, upNewOwner)
-      // This is only for OLD politis contract - NOT UP
       .buyTile(tileId)
       .send(transaction)
 

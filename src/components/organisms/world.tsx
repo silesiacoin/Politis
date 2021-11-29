@@ -14,11 +14,8 @@ import Button from '../atoms/button';
 import Loader from '../atoms/loader';
 import { buyTile } from '../../utils/buyTile';
 import { Context } from '../../Context';
-import Label from '../atoms/label';
-import InputString from '../atoms/inputString';
 import Submit from '../atoms/submit';
-import getERC725InstanceForOwners from '../../helpers/getERC725InstanceForOwners';
-import { LSP3Profile, LSP3ProfileJSON } from '@lukso/lsp-factory.js';
+import { LSP3Profile } from '@lukso/lsp-factory.js';
 
 const berlinMapCor = [13.402, 52.51];
 const mapZoom = 11;
@@ -32,8 +29,8 @@ export default function World(): ReactElement {
   const [onModal, setOnModal] = useState(false);
   const [loadingOn, setLoadingOn] = useState(true);
   const [transactionLoadingOn, setTransactionLoadingOn] = useState(false);
-  const [newOwner, setNewOwner] = useState(universalProfileAddress ? universalProfileAddress : '');
-  const [selectedUP, setSelectedUP] = useState<null | LSP3Profile>(null);
+  const [newOwner] = useState(universalProfileAddress ? universalProfileAddress : '');
+  const [selectedUP] = useState<null | LSP3Profile>(null);
   const [successOn, setSuccessOn] = useState(false);
   const [error, setError] = useState<null | Error>(null);
 
@@ -48,25 +45,6 @@ export default function World(): ReactElement {
     setSelected(tile);
     setOnModal(true);
   }
-
-  async function getUsersData(UPaddress: string | null | undefined) {
-    if (UPaddress && UPaddress !== '0x0000000000000000000000000000000000000000') {
-      await setSelectedUP(null);
-      const erc725 = getERC725InstanceForOwners(UPaddress);
-      const fetchProfile = await erc725.fetchData('LSP3Profile');
-      const profileJSON = fetchProfile['LSP3Profile'] as LSP3ProfileJSON;
-      setSelectedUP(profileJSON.LSP3Profile);
-    } else {
-      setSelectedUP(null);
-    }
-  }
-
-  useEffect(() => {
-    if (onModal) {
-      // This is only for NEW politis contract - WITH UP
-      // getUsersData(selected?.owner);
-    }
-  }, [onModal, selected?.owner]);
 
   useEffect(() => {
     if (!startCreateMap && !onMap) {
@@ -139,12 +117,9 @@ export default function World(): ReactElement {
     event.preventDefault();
     setTransactionLoadingOn(true);
     setOnModal(true);
-    // This "if" is only for NEW politis contract - WITH UP
-    // if (selected?.owner !== universalProfileAddress) {
-    // This "if" is only for OLD politis contract - NOT UP
     if (publicAddress && selected?.owner && selected?.owner.toLowerCase() !== publicAddress.toLowerCase()) {
       if (!publicAddress || !selected?.price || !selected?.id || !newOwner) return;
-      const response = await buyTile(publicAddress, selected?.price, selected?.id, newOwner);
+      const response = await buyTile(publicAddress, selected?.price, selected?.id);
 
       if (response === true) {
         setSuccessOn(true);
@@ -250,15 +225,6 @@ export default function World(): ReactElement {
               </div>
             </div>
             <form onSubmit={handleSubmit}>
-              {/* // This is only for NEW politis contract - WITH UP */}
-              {/* <Label>
-                New owner:
-                <InputString
-                  value={newOwner}
-                  onChange={(event) => setNewOwner((event.target as HTMLTextAreaElement).value)}
-                  required
-                />
-              </Label> */}
               <Submit value='Yes' />
               <Button classes={'button--margin button--width'} onClick={() => setOnModal(false)}>
                 No
