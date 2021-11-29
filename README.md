@@ -24,6 +24,9 @@ The demo of this app is available at:
 
 To watch our demo video visit:
 
+- [Youtube](https://www.youtube.com/watch?v=Ws0FZG9iXYc)
+- [Google Drive](https://drive.google.com/file/d/1Tat7nFuf_k_zWJeHggfozsbvRgKExEne/view)
+
 ## Project Requirements
 
 To run this project locally you'll need:
