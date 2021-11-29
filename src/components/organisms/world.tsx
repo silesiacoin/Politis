@@ -170,46 +170,48 @@ export default function World(): ReactElement {
             {!successOn && !error ? (
               <>
                 <Loader info={'Transaction in progress'} />
-                <Button classes={'button--margin button--width'} onClick={() => {
-                  setOnModal(false);
-                  setTransactionLoadingOn(false);
-                }}>
+                <Button
+                  classes={'button--margin button--width'}
+                  onClick={() => {
+                    setOnModal(false);
+                    setTransactionLoadingOn(false);
+                  }}>
                   Cancel
                 </Button>
               </>
             ) : (
               <>
-                {successOn &&
+                {successOn && (
                   <>
-                    <div style={{ color: 'green' }}>
-                      Success
-                    </div>
-                    <Button classes={'button--margin button--width'} onClick={() => {
-                      setOnModal(false);
-                      setTransactionLoadingOn(false);
-                      setOnMap(false);
-                      setSuccessOn(false);
-                      setError(null);
-                    }}>
+                    <div style={{ color: 'green' }}>Success</div>
+                    <Button
+                      classes={'button--margin button--width'}
+                      onClick={() => {
+                        setOnModal(false);
+                        setTransactionLoadingOn(false);
+                        setOnMap(false);
+                        setSuccessOn(false);
+                        setError(null);
+                      }}>
                       Refresh map
                     </Button>
                   </>
-                }
-                {error &&
+                )}
+                {error && (
                   <>
-                    <div style={{ color: 'red' }}>
-                      {error.toString()}
-                    </div>
-                    <Button classes={'button--margin button--width'} onClick={() => {
-                      setOnModal(false);
-                      setTransactionLoadingOn(false);
-                      setError(null);
-                      setSuccessOn(false);
-                    }}>
+                    <div className='error'>{error.toString()}</div>
+                    <Button
+                      classes={'button--margin button--width'}
+                      onClick={() => {
+                        setOnModal(false);
+                        setTransactionLoadingOn(false);
+                        setError(null);
+                        setSuccessOn(false);
+                      }}>
                       Cancel
                     </Button>
                   </>
-                }
+                )}
               </>
             )}
           </>
@@ -218,7 +220,8 @@ export default function World(): ReactElement {
             <div className={'modal__panel__header'}>
               <h4>Do you want to buy a tile?</h4>
               <h5>
-                After the purchase, the value and price of the tile will be doubled. When someone buys a tile from you, you will get increased value. The commission is charged on the purchase.
+                After the purchase, the value and price of the tile will be doubled. When someone buys a tile from you, you
+                will get increased value. The commission is charged on the purchase.
               </h5>
               <br />
               {selected?.owner !== gameMaster ? (
@@ -237,7 +240,10 @@ export default function World(): ReactElement {
             <div className={'modal__panel__body'}>
               <div className={'modal__panel__body__info'}>
                 <h5> id: {selected?.id}</h5>
-                <h5>polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[1][0].toFixed(2)} {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)}</h5>
+                <h5>
+                  polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[1][0].toFixed(2)}{' '}
+                  {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)}
+                </h5>
                 <br />
                 <h4>value: {selected?.price && web3.utils.fromWei(selected?.price.toString(), 'ether')} LYXt</h4>
                 <h4>price: {selected?.price && web3.utils.fromWei((selected?.price * 2).toString(), 'ether')} LYXt</h4>
@@ -253,6 +259,6 @@ export default function World(): ReactElement {
         )}
       </Modal>
       {onMap && <div id={'map'} className={'map'}></div>}
-    </Fragment >
+    </Fragment>
   );
 }
