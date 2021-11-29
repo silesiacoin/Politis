@@ -51,7 +51,7 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
 
       const info: Tile = {
         id: arrayLength,
-        owner: tileResponse?.owner,
+        owner: tileResponse?.upAddress,
         price: tileResponse.currentPrice > 0 ? tileResponse.currentPrice : minimalPrice,
         polygon: poly,
       };

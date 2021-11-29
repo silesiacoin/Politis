@@ -14,25 +14,25 @@ import Button from '../atoms/button';
 import Loader from '../atoms/loader';
 import { buyTile } from '../../utils/buyTile';
 import { Context } from '../../Context';
-import Label from '../atoms/label';
-import InputString from '../atoms/inputString';
 import Submit from '../atoms/submit';
 import getERC725InstanceForOwners from '../../helpers/getERC725InstanceForOwners';
 import { LSP3Profile, LSP3ProfileJSON } from '@lukso/lsp-factory.js';
+import { getWeb3 } from '../../helpers/getWeb3';
 
 const berlinMapCor = [13.402, 52.51];
 const mapZoom = 11;
 
+const gameMaster = '0x1e19655764Ca86846C6561E2023EA68FB9D04FCF';
+
 export default function World(): ReactElement {
   const { publicAddress, universalProfileAddress } = useContext(Context);
-
+  const web3 = getWeb3();
   const [startCreateMap, setStart] = useState<boolean>(true);
   const [selected, setSelected] = useState<null | Tile>(null);
   const [onMap, setOnMap] = useState(true);
   const [onModal, setOnModal] = useState(false);
   const [loadingOn, setLoadingOn] = useState(true);
   const [transactionLoadingOn, setTransactionLoadingOn] = useState(false);
-  const [newOwner, setNewOwner] = useState(universalProfileAddress ? universalProfileAddress : '');
   const [selectedUP, setSelectedUP] = useState<null | LSP3Profile>(null);
   const [successOn, setSuccessOn] = useState(false);
   const [error, setError] = useState<null | Error>(null);
@@ -50,7 +50,7 @@ export default function World(): ReactElement {
   }
 
   async function getUsersData(UPaddress: string | null | undefined) {
-    if (UPaddress && UPaddress !== '0x0000000000000000000000000000000000000000') {
+    if (UPaddress && UPaddress !== gameMaster) {
       await setSelectedUP(null);
       const erc725 = getERC725InstanceForOwners(UPaddress);
       const fetchProfile = await erc725.fetchData('LSP3Profile');
@@ -138,9 +138,9 @@ export default function World(): ReactElement {
     event.preventDefault();
     setTransactionLoadingOn(true);
     setOnModal(true);
-    if (selected?.owner !== newOwner) {
-      if (!publicAddress || !selected?.price || !selected?.id || !newOwner) return;
-      const response = await buyTile(publicAddress, selected?.price, selected?.id, newOwner);
+    if (selected?.owner && universalProfileAddress && selected?.owner.toLowerCase() !== universalProfileAddress.toLowerCase()) {
+      if (!publicAddress || !selected?.price || !selected?.id || !universalProfileAddress) return;
+      const response = await buyTile(publicAddress, selected?.price, selected?.id, universalProfileAddress);
 
       if (response === true) {
         setSuccessOn(true);
@@ -220,7 +220,7 @@ export default function World(): ReactElement {
                 After the purchase, the value and price of the tile will be doubled. When someone buys a tile from you, you will get increased value. The commission is charged on the purchase.
               </h5>
               <br />
-              {selected?.owner !== '0x0000000000000000000000000000000000000000' ? (
+              {selected?.owner !== gameMaster ? (
                 <>
                   <h4>Owner:</h4>
                   <h4>{selectedUP?.name}</h4>
@@ -238,19 +238,11 @@ export default function World(): ReactElement {
                 <h5> id: {selected?.id}</h5>
                 <h5>polygon: {selected?.polygon[0][0].toFixed(2)} {selected?.polygon[1][0].toFixed(2)} {selected?.polygon[0][1].toFixed(2)} {selected?.polygon[1][1].toFixed(2)}</h5>
                 <br />
-                <h4>value: {selected?.price && (selected.price / (10 ** 18))} LUKSO</h4>
-                <h4>price: {selected?.price && (2 * (selected.price / (10 ** 18)))} LUKSO</h4>
+                <h4>value: {selected?.price && web3.utils.fromWei(selected?.price.toString(), 'ether')} LYXt</h4>
+                <h4>price: {selected?.price && web3.utils.fromWei((selected?.price * 2).toString(), 'ether')} LYXt</h4>
               </div>
             </div>
             <form onSubmit={handleSubmit}>
-              <Label>
-                New owner:
-                <InputString
-                  value={newOwner}
-                  onChange={(event) => setNewOwner((event.target as HTMLTextAreaElement).value)}
-                  required
-                />
-              </Label>
               <Submit value='Yes' />
               <Button classes={'button--margin button--width'} onClick={() => setOnModal(false)}>
                 No
@@ -260,6 +252,6 @@ export default function World(): ReactElement {
         )}
       </Modal>
       {onMap && <div id={'map'} className={'map'}></div>}
-    </Fragment>
+    </Fragment >
   );
 }
