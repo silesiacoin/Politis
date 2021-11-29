@@ -110,7 +110,7 @@ export default function World(): ReactElement {
           const myText = 'id: ' + f.get('id');
           const highlightStyle = new Style({
             fill: new Fill({
-              color: 'rgba(255,255,255,0.7)',
+              color: `#${f.get('upAddress').substr(34, 6)}`,
             }),
             stroke: new Stroke({
               color: '#3399CC',
