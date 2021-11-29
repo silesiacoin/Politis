@@ -63,9 +63,9 @@ export default function World(): ReactElement {
 
   useEffect(() => {
     if (onModal) {
-      getUsersData(selected?.owner);
+      getUsersData(selected?.upAddress);
     }
-  }, [onModal, selected?.owner]);
+  }, [onModal, selected?.upAddress]);
 
   useEffect(() => {
     if (!startCreateMap && !onMap) {
@@ -88,6 +88,7 @@ export default function World(): ReactElement {
           const tile: Tile = {
             id: f.get('id'),
             owner: f.get('owner'),
+            upAddress: f.get('upAddress'),
             price: f.get('price'),
             polygon: f.get('polygon'),
           };
@@ -139,8 +140,8 @@ export default function World(): ReactElement {
     setTransactionLoadingOn(true);
     setOnModal(true);
 
-    if (selected?.owner && universalProfileAddress && selected?.owner.toLowerCase() !== universalProfileAddress.toLowerCase()) {
-      if (!publicAddress || !selected?.price || (selected?.id < 0) || !universalProfileAddress) return;
+    if (selected?.owner && publicAddress && selected?.owner.toLowerCase() !== publicAddress.toLowerCase()) {
+      if (!publicAddress || !selected?.price || selected?.id < 0 || !universalProfileAddress) return;
       const response = await buyTile(publicAddress, selected?.price, selected?.id, universalProfileAddress);
 
       if (response === true) {
@@ -152,7 +153,7 @@ export default function World(): ReactElement {
       }
     } else {
       setSuccessOn(false);
-      setError(new Error('You cannot buy your own tile'));
+      setError(new Error("The tile couldn't be bought, as it is currently assigned to your MetaMask account"));
     }
     setTransactionLoadingOn(true);
     setOnModal(true);

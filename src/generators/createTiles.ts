@@ -4,6 +4,7 @@ import { getCityContract } from '../helpers/getCityContract';
 export interface Tile {
   id: number;
   owner: string | null;
+  upAddress: string | null;
   price: number | null;
   polygon: number[][];
 }
@@ -51,7 +52,8 @@ export async function createTiles(): Promise<turf.helpers.Feature<turf.helpers.P
 
       const info: Tile = {
         id: arrayLength,
-        owner: tileResponse?.upAddress,
+        owner: tileResponse?.owner,
+        upAddress: tileResponse?.upAddress,
         price: tileResponse.currentPrice > 0 ? tileResponse.currentPrice : minimalPrice,
         polygon: poly,
       };
