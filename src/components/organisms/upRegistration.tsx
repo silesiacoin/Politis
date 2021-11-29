@@ -5,6 +5,7 @@ import UpRegistrationForm from './upRegistrationForm';
 import Button from '../atoms/button';
 import ProgressBar from '../atoms/progressBar';
 import Container from '../atoms/container';
+import Loader from '../atoms/loader';
 
 interface Props {
   setShouldRenderRegistration: Dispatch<SetStateAction<boolean>>;
@@ -59,6 +60,7 @@ const UpRegistration = ({ setShouldRenderRegistration }: Props): ReactElement =>
       ) : eventCount ? (
         <>
           <Container>
+            <Loader info={''} />
             <p>Your universal profile is currently being deployed. This may take a while. Wait until the process is over.</p>
             <p>Currently we are {deploymentStatus}</p>
             <ProgressBar currentLength={eventCount} />

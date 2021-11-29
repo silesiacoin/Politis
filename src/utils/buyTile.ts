@@ -12,7 +12,7 @@ export async function buyTile(
   const web3 = getWeb3();
   const { estimateGas } = web3.eth;
   try {
-    const price = `${currentPrice * 2 + 0.2}`;
+    const price = `${currentPrice * 2}`;
     const transaction = {
       from: metamaskAddress,
       gasPrice,
