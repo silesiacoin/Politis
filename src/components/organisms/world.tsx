@@ -138,8 +138,9 @@ export default function World(): ReactElement {
     event.preventDefault();
     setTransactionLoadingOn(true);
     setOnModal(true);
+
     if (selected?.owner && universalProfileAddress && selected?.owner.toLowerCase() !== universalProfileAddress.toLowerCase()) {
-      if (!publicAddress || !selected?.price || !selected?.id || !universalProfileAddress) return;
+      if (!publicAddress || !selected?.price || (selected?.id < 0) || !universalProfileAddress) return;
       const response = await buyTile(publicAddress, selected?.price, selected?.id, universalProfileAddress);
 
       if (response === true) {
